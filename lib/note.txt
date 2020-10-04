@@ -1,0 +1,33 @@
+
+//for firebase
+SHA-1 required for both platforms
+
+
+
+//i have not save user locally i just mock it
+
+
+
+//set up for ios google map
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+my flutter version
+Flutter 1.17.5 • channel unknown • unknown source
+Framework • revision 8af6b2f038 (3 months ago) • 2020-06-30 12:53:55 -0700
+Engine • revision ee76268252
+Tools • Dart 2.8.4
