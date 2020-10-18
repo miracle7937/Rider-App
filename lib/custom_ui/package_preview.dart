@@ -1,13 +1,93 @@
+import 'dart:io';
+
 import 'package:deliveryApp/custom_ui/custom_button.dart';
 import 'package:deliveryApp/custom_ui/custom_card.dart';
+import 'package:deliveryApp/models/Rate.dart';
+import 'package:deliveryApp/models/walletModel.dart';
 import 'package:deliveryApp/pages/select_payment_method_screen.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 
-class PackagePreview extends StatelessWidget {
+class PackagePreview extends StatefulWidget {
+  final String receiverName;
+  final String receiverNumber;
+  final String packageName;
+  final String packageWeight;
+  final String packageValue;
+
+  final File selectedImage;
+  final double distanceInKilloMeter;
+  final frigile;
+  final String pickupLoc, destinationLoc;
+
+  const PackagePreview(
+      {Key key,
+      this.receiverName,
+      this.receiverNumber,
+      this.packageName,
+      this.packageWeight,
+      this.packageValue,
+      this.selectedImage,
+      this.distanceInKilloMeter,
+      this.frigile,
+      this.pickupLoc,
+      this.destinationLoc})
+      : super(key: key);
+
+  @override
+  _PackagePreviewState createState() => _PackagePreviewState();
+}
+
+class _PackagePreviewState extends State<PackagePreview> {
+  String amount;
+  String userWalletAmount;
+
+  @override
+  void initState() {
+    getAmount();
+
+    super.initState();
+  }
+
+  getAmount() async {
+    getRate(context).then((value) {
+      setState(() {
+        amount = (value.rate * widget.distanceInKilloMeter).toStringAsFixed(2);
+        print(value.rate);
+      });
+    }).whenComplete(() {
+      getWalletAmount();
+    });
+  }
+
+  getWalletAmount() async {
+    var data = await getWallet(context);
+
+    setState(() {
+      userWalletAmount = data.amount;
+    });
+  }
+
+  Map addToMap() {
+    Map map = {};
+    //',,,,,,,,'package_images',,
+    map['delivery_address'] = widget.pickupLoc;
+    map['pickup_address'] = widget.destinationLoc;
+    map['receiver_fullname'] = widget.receiverName;
+    map['receiver_phone'] = widget.receiverNumber;
+    map['package_weight'] = widget.packageWeight;
+    map['package_value'] = int.parse(widget.packageValue);
+    map['fragile'] = widget.frigile;
+
+    map['payment_amount'] = double.parse(amount);
+    map['package_title'] = widget.packageName;
+    return map;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -45,7 +125,7 @@ class PackagePreview extends StatelessWidget {
                       style: titleSub,
                     ),
                     Text(
-                      'Adejimi Tolulope ',
+                      widget.receiverName ?? '',
                       style: maintitle,
                     ),
                     SizedBox(
@@ -62,8 +142,53 @@ class PackagePreview extends StatelessWidget {
                       style: titleSub,
                     ),
                     Text(
-                      '+2348105059613',
+                      widget.receiverNumber,
                       style: maintitle,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              )),
+              SizedBox(
+                height: 20,
+              ),
+              boxPlaceHolder(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Pick Up Address',
+                      style: titleSub,
+                    ),
+                    Wrap(
+                      children: [
+                        Text(
+                          widget.pickupLoc,
+                          style: maintitle,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Delivery Address',
+                      style: titleSub,
+                    ),
+                    Wrap(
+                      children: [
+                        Text(
+                          widget.destinationLoc,
+                          style: maintitle,
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 20,
@@ -95,7 +220,7 @@ class PackagePreview extends StatelessWidget {
                       style: titleSub,
                     ),
                     Text(
-                      'Iphone x max ',
+                      widget.packageName,
                       style: maintitle,
                     ),
                     SizedBox(
@@ -110,7 +235,7 @@ class PackagePreview extends StatelessWidget {
                       style: titleSub,
                     ),
                     Text(
-                      '0-10kg',
+                      widget.packageWeight,
                       style: maintitle,
                     ),
                     SizedBox(
@@ -122,21 +247,25 @@ class PackagePreview extends StatelessWidget {
                       style: titleSub,
                     ),
                     Text(
-                      'Yes',
+                      widget.frigile == 0 ? 'No' : 'Yes',
                       style: maintitle,
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * .2,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                            color: greyColor,
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                    ),
+                    widget.selectedImage != null
+                        ? Center(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * .2,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: FileImage(widget.selectedImage)),
+                                  color: greyColor,
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 20,
                     ),
@@ -146,7 +275,9 @@ class PackagePreview extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              AmountCard(),
+              AmountCard(
+                amount: amount,
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -156,7 +287,12 @@ class PackagePreview extends StatelessWidget {
                     title: 'Continue to Payment',
                     callback: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PaymentScreen()));
+                          builder: (context) => PaymentScreen(
+                                userWalletAmount: userWalletAmount,
+                                data: addToMap(),
+                                selectedFile: widget.selectedImage,
+                                amount: amount,
+                              )));
                     },
                   ),
                 ],
@@ -167,7 +303,6 @@ class PackagePreview extends StatelessWidget {
       ),
     );
   }
-
 
   boxPlaceHolder({Widget child}) => Container(
         child: child,

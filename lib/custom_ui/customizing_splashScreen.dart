@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:async';
 import 'package:deliveryApp/static_content/Images.dart';
+import 'package:deliveryApp/utils/responsiveWidget.dart';
 import 'package:flutter/material.dart';
 
 class MySplashScreen extends StatefulWidget {
@@ -57,67 +58,74 @@ class _MySplashScreenState extends State<MySplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new InkWell(
-        onTap: widget.onClick,
-        child: new Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
-                image: widget.imageBackground == null
-                    ? null
-                    : new DecorationImage(
-                        fit: BoxFit.cover,
-                        image: widget.imageBackground,
-                      ),
-                gradient: widget.gradientBackground,
-                color: widget.backgroundColor,
+     
+      body: ResponsiveWidget(builder: (context, devInfo) {
+
+        return new InkWell(
+          onTap: widget.onClick,
+          child: new Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              new Container(
+                decoration: new BoxDecoration(
+                  image: widget.imageBackground == null
+                      ? null
+                      : new DecorationImage(
+                          fit: BoxFit.cover,
+                          image: widget.imageBackground,
+                        ),
+                  gradient: widget.gradientBackground,
+                  color: widget.backgroundColor,
+                ),
               ),
-            ),
-            new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Expanded(
-                  flex: 2,
-                  child: new Container(
-                      child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        child: new Container(child: widget.image),
-                        radius: widget.photoSize,
-                      ),
-                      new Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                      ),
-                      widget.title
-                    ],
-                  )),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircularProgressIndicator(
-                        strokeWidth: 1,
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            widget.loaderColor),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                      ),
-                      widget.loadingText
-                    ],
+              new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new Expanded(
+                    flex: 3,
+                    child: new Container(
+                        child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: new Container(child: widget.image),
+                          radius: widget.photoSize,
+                        ),
+                        Container(
+                          
+                          child: widget.title),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CircularProgressIndicator(
+                          strokeWidth: 1,
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              widget.loaderColor),
+                        ),
+                      ],
+                    )),
                   ),
-                ),
-                Image.asset(CryptoImage.splashscreenRider)
-              ],
-            ),
-          ],
-        ),
-      ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                        
+                  //       Padding(
+                  //         padding: const EdgeInsets.only(top: 20.0),
+                  //       ),
+                  //       widget.loadingText
+                  //     ],
+                  //   ),
+                  // ),
+                  Image.asset(AssetImages.splashscreenRider)
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

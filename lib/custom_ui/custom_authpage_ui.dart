@@ -7,6 +7,7 @@ class CustomAuthWidget extends StatelessWidget {
   final String btnText;
   final String title, subTitle;
   final Widget form;
+  final bool isloading;
 
   const CustomAuthWidget(
       {Key key,
@@ -14,7 +15,7 @@ class CustomAuthWidget extends StatelessWidget {
       this.btnText,
       this.title,
       this.subTitle,
-      this.form})
+      this.form, this.isloading=false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -22,12 +23,13 @@ class CustomAuthWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.only(bottomRight: Radius.circular(50)),
                 color: Colors.white),
             height: MediaQuery.of(context).size.height * 0.4,
-            child: Image.asset(CryptoImage.authbg),
+            child: Image.asset(AssetImages.authbg),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
@@ -62,9 +64,10 @@ class CustomAuthWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.05,
           ),
           CustomButton(
+            loading: isloading,
             textStyle: TextStyle(color: Colors.black, fontSize: 16),
             title: btnText,
             color: Colors.white,

@@ -22,12 +22,15 @@ class RegEmailPasswordScreen extends StatefulWidget {
 
 class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  FocusNode _usernameFocusNode = FocusNode();
+  FocusNode _firstNameFocusNode = FocusNode();
+
+  FocusNode _lastNameFocusNode = FocusNode();
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
   bool isLoading = false;
 
-  final username = TextEditingController();
+  final firstName = TextEditingController();
+  final lastnaeme = TextEditingController();
   final password = TextEditingController();
   final email = TextEditingController();
 
@@ -68,14 +71,21 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                         CustomTextForm(
                             validator: userNameValidation,
                             onFieldSubmitted: (_) {
-                              fieldFocusChange(
-                                  context, _usernameFocusNode, _emailFocusNode);
+                              fieldFocusChange(context, _firstNameFocusNode,
+                                  _lastNameFocusNode);
                             },
-                            controller: username,
+                            controller: firstName,
                             titleStyle: style,
                             inputStyle: TextStyle(color: Colors.white),
-                            title: 'Your Name',
-                            decoration: getInputStyle(icon: CryptoImage.user)),
+                            title: 'First Name',
+                            decoration: getInputStyle(icon: AssetImages.user)),
+                        CustomTextForm(
+                            validator: userNameValidation,
+                            controller: lastnaeme,
+                            titleStyle: style,
+                            inputStyle: TextStyle(color: Colors.white),
+                            title: 'Last Name',
+                            decoration: getInputStyle(icon: AssetImages.user)),
                         CustomTextForm(
                             validator: emailValidation,
                             controller: email,
@@ -86,7 +96,7 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                               fieldFocusChange(
                                   context, _emailFocusNode, _passwordFocusNode);
                             },
-                            decoration: getInputStyle(icon: CryptoImage.email)),
+                            decoration: getInputStyle(icon: AssetImages.email)),
                         CustomTextForm(
                           onFieldSubmitted: (_) {
                             _passwordFocusNode.unfocus();
@@ -96,7 +106,7 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                           titleStyle: style,
                           title: 'Password',
                           inputStyle: TextStyle(color: Colors.white),
-                          decoration: getInputStyle(icon: CryptoImage.security),
+                          decoration: getInputStyle(icon: AssetImages.security),
                         ),
                         SizedBox(height: 35),
                         Column(
@@ -116,10 +126,11 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
 
                                     NewUser(ServerData(), '/register', context,
                                         data: {
-                                          "name": "Ak8065u6yt3",
+                                          "firstname": "Frank",
+                                          "lastname": "Dray",
                                           "phone": widget.phoneNumber,
-                                          "email": "usu084@mail.com",
-                                          "password": "Pass5546iy12598453"
+                                          "email": "user1@mail.com",
+                                          "password": "PassWord12345"
                                         }).post().then((value) {
                                       print('chi $value');
 
@@ -128,7 +139,7 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (contex) =>
-                                                    SignUpScreen()));
+                                                    SignInScreen()));
                                       }
                                       setState(() {
                                         isLoading = false;

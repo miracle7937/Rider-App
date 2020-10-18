@@ -2,16 +2,20 @@ import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextForm extends StatelessWidget {
-  final String title, hinText,errorText;
+  final String title, hinText, errorText;
   final TextInputType keyboardType;
   final InputDecoration decoration;
   final TextStyle titleStyle, inputStyle;
   final bool shrinkBottom;
   final TextEditingController controller;
-final FocusNode focusNode;
-final Function(String) validator, onFieldSubmitted;
+  final FocusNode focusNode;
+  final Function(String) validator, onFieldSubmitted;
+  final Function(String) onChange;
+  final bool obscureText;
   const CustomTextForm(
       {Key key,
+      this.obscureText = false,
+      this.onChange,
       this.controller,
       this.onFieldSubmitted,
       this.validator,
@@ -41,7 +45,8 @@ final Function(String) validator, onFieldSubmitted;
           height: 10,
         ),
         TextFormField(
-          autofocus: true,
+          onChanged: onChange,
+          obscureText: obscureText,
           validator: validator,
           onFieldSubmitted: onFieldSubmitted,
           focusNode: focusNode,
@@ -74,16 +79,19 @@ final Function(String) validator, onFieldSubmitted;
 }
 
 class CustomDropDowm extends StatefulWidget {
+  final String title;
+  final Function(String) onChange;
+
+  const CustomDropDowm({Key key, this.title, this.onChange}) : super(key: key);
   @override
   _CustomDropDowmState createState() => _CustomDropDowmState();
 }
 
 class _CustomDropDowmState extends State<CustomDropDowm> {
   final List<ListItem> _dropdownItems = [
-    ListItem(1, "First Value"),
-    ListItem(2, "Second Item"),
-    ListItem(3, "Third Item"),
-    ListItem(4, "Fourth Item")
+    ListItem(1, "0-10kg"),
+    ListItem(2, "10-20kg"),
+    ListItem(3, "20-50kg"),
   ];
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
@@ -111,21 +119,33 @@ class _CustomDropDowmState extends State<CustomDropDowm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 45,
-      child: Center(
-        child: DropdownButton<ListItem>(
-            value: _selectedItem,
-            items: _dropdownMenuItems,
-            onChanged: (value) {
-              setState(() {
-                _selectedItem = value;
-              });
-            }),
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5), border: Border.all(width: 1)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        widget.title != null
+            ? Text(
+                widget.title,
+              )
+            : Container(),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: 150,
+          height: 45,
+          child: Center(
+            child: DropdownButton<ListItem>(
+                value: _selectedItem,
+                items: _dropdownMenuItems,
+                onChanged: (value) {
+                  widget.onChange(value.name);
+                }),
+          ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1)),
+        ),
+      ],
     );
   }
 }

@@ -6,19 +6,20 @@ class CustomButton extends StatelessWidget {
   final bool loading;
   final Color color;
   final TextStyle textStyle;
-
+final bool disAble;
   const CustomButton({
     Key key,
     @required this.title,
     this.callback,
     this.loading = false,
+    this.disAble =false,
     this.color,
     this.textStyle,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: loading ? null : callback,
+      onTap: (loading || disAble) ? null : callback,
       child: Container(
         height: 53,
         width: 300,

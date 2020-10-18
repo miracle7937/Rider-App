@@ -4,6 +4,8 @@ import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:deliveryApp/static_content/Images.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -15,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.6,
-            child: Image.asset(CryptoImage.welcomePageIcon),
+            child: Image.asset(AssetImages.welcomePageIcon),
           ),
           Expanded(
               child: Padding(
@@ -26,15 +28,17 @@ class WelcomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   _button(
+                    image: AssetImages.loginIcon,
                       title: 'LOGIN',
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignUpScreen()));
+                                builder: (context) => SignInScreen()));
                       },
                       subTitle: 'Login if you have an account already'),
                   _button(
+                    image: AssetImages.signUpIcon,
                       onTap: () {
                         Navigator.push(
                             context,
@@ -61,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  _button({String title, subTitle, VoidCallback onTap}) {
+  _button({String title, subTitle, String image ,VoidCallback onTap}) {
     return InkWell(
       splashColor: appColor,
       focusColor: Colors.red,
@@ -76,7 +80,7 @@ class WelcomeScreen extends StatelessWidget {
             SizedBox(
               height: 55,
               width: 55,
-              child: Placeholder(),
+              child: Image.asset(image),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -88,9 +92,12 @@ class WelcomeScreen extends StatelessWidget {
                     color: Colors.black),
               ),
             ),
-            Text(
-              subTitle,
-              style: TextStyle(fontSize: 8, color: Colors.black),
+            Center(
+              child: Text(
+                subTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Colors.black),
+              ),
             )
           ],
         ),

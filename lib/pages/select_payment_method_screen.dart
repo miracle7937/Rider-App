@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:deliveryApp/logic/payment/payment.dart';
+import 'package:deliveryApp/models/walletModel.dart';
 import 'package:deliveryApp/pages/bank_payment_screen.dart';
 import 'package:deliveryApp/pages/fund_wallet_screen.dart';
 import 'package:deliveryApp/pages/pos_payment_method.dart';
@@ -6,33 +10,54 @@ import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final Map data;
+  final String userWalletAmount;
+  final String amount;
+   final File selectedFile;
+  
+
+  const PaymentScreen({Key key, this.data, this.userWalletAmount, this.amount, this.selectedFile}) : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  
+
   List<PaymentMethod> get paymethod => [
         PaymentMethod(
-            amount: ' ₦ 12000',
+            amount: ' ₦ ${ widget.userWalletAmount ?? ''}',
             title: 'Pay with Wallet',
-            imageurl: CryptoImage.walletIcon,
+            imageurl: AssetImages.walletIcon,
             callback: () => fundWallet(context)),
         PaymentMethod(
             title: 'Pay with card on delivery',
-            imageurl: CryptoImage.masterCard,
+            imageurl: AssetImages.masterCard,
             callback: () => posPayment(context)),
         PaymentMethod(
           title: 'Pay with card on pick up',
-          imageurl: CryptoImage.masterCard,
+          imageurl: AssetImages.masterCard,
         ),
         PaymentMethod(
             title: 'Pay with Bank Transfer',
-            imageurl: CryptoImage.bankTransfer,
+            imageurl: AssetImages.bankTransfer,
             callback: () => bankPayment(context))
       ];
+
+  @override
+  void initState() {
+    super.initState();
+   
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        
+      }),
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
@@ -46,12 +71,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: 45,
+            ),
             Text(
               'How will you like to pay',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             SizedBox(
-              height: 20,
+              height: 45,
             ),
             Expanded(
               child: ListView.builder(
@@ -89,13 +117,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   //fund wallet of user
   fundWallet(context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => FundWalletScreen()));
+    var map = widget.data;
+    map['payment_type'] = 'Wallet';
+    Payment().payWithWallet(double.parse(widget.amount), double.parse(widget.userWalletAmount), context, map,widget.selectedFile);
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (context) => FundWalletScreen()));
   }
 
   paymentCard({String image, title, amount, VoidCallback callback}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       child: InkWell(
         onTap: callback,
         child: Container(

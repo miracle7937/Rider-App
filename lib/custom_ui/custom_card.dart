@@ -1,46 +1,97 @@
+import 'package:deliveryApp/models/walletModel.dart';
 import 'package:deliveryApp/static_content/colors.dart';
+import 'package:deliveryApp/utils/responsiveWidget.dart';
 import 'package:flutter/material.dart';
 
-class CustomCard extends StatelessWidget {
-final bool forWallet;
+class CustomCard extends StatefulWidget {
+  final bool forWallet;
+  final VoidCallback topUp;
 
-  const CustomCard({Key key, this.forWallet=false}) : super(key: key);
- 
+  const CustomCard({Key key, this.forWallet = false, this.topUp})
+      : super(key: key);
+
+  @override
+  _CustomCardState createState() => _CustomCardState();
+}
+
+class _CustomCardState extends State<CustomCard> {
+  String amount;
+  getWalletAmount() async {
+    var walletAmount = await getWallet(context);
+
+    setState(() {
+      amount = walletAmount.amount;
+    });
+  }
+
+  @override
+  void initState() {
+    getWalletAmount();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: 177,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-              forWallet?Text('CURRENT ACCOUNT', style: TextStyle(
-                fontSize: 14, color: Colors.white
-              ),):Container(),
-                forWallet? SizedBox(
-                  height: 20,
-                ):SizedBox.shrink(),
-          Text(
-            '₦  200.00',
-            style: TextStyle(
-                fontWeight: FontWeight.w300, fontSize: 30, color: whiteColor),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-        forWallet? Container(): Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[topUppButton()],
-          )
-        ],
-      ),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color.fromRGBO(0, 0, 0, 0.5),
-          offset: Offset(4, 4),
-          blurRadius: 15,
+    return InkWell(
+      onTap: widget.forWallet ? null : widget.topUp,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: 177,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            widget.forWallet
+                ? Text(
+                    'CURRENT ACCOUNT',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  )
+                : Container(),
+            widget.forWallet
+                ? SizedBox(
+                    height: 20,
+                  )
+                : SizedBox.shrink(),
+            !widget.forWallet
+                ? Text(
+                    '₦  ${amount ?? ''}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 30,
+                        color: whiteColor),
+                  )
+                : StreamBuilder(
+                    stream: Stream.fromFuture(getWallet(context)),
+                    builder: (context, snapshot) {
+                      return Text(
+                        '₦  ${snapshot.data?.amount ?? ''}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 30,
+                            color: whiteColor),
+                      );
+                    }),
+            SizedBox(
+              height: 15,
+            ),
+            widget.forWallet
+                ? Container()
+                : InkWell(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[topUppButton()],
+                    ),
+                  )
+          ],
         ),
-      ], color: appColor, borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.5),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+          ),
+        ], color: appColor, borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 
@@ -59,64 +110,69 @@ final bool forWallet;
 class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.15,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 14),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Lekki Phase 1',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Color.fromRGBO(140, 140, 140, 1),
-                      fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  'Oshodi, Lagos',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Color.fromRGBO(140, 140, 140, 1),
-                      fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  '₦  1500',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Color.fromRGBO(140, 140, 140, 1),
-                      fontWeight: FontWeight.w700),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[Text('1:00pm'), Text('12:00pm'), Text('')],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                placeHolder(Colors.grey, 'ORD2333'),
-                placeHolder(greenColor, 'completed'),
-                Text('Today')
-              ],
-            )
-          ],
+    return ResponsiveWidget(builder: (context, info) {
+      var isSmall = info.deviceType == DeviceScreenType.XMobile;
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: isSmall
+            ? MediaQuery.of(context).size.height * 0.2
+            : MediaQuery.of(context).size.height * 0.15,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 14),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Lekki Phase 1',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(140, 140, 140, 1),
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    'Oshodi, Lagos',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(140, 140, 140, 1),
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    '₦  1500',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(140, 140, 140, 1),
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[Text('1:00pm'), Text('12:00pm'), Text('')],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  placeHolder(Colors.grey, 'ORD2333'),
+                  placeHolder(greenColor, 'completed'),
+                  Text('Today')
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color.fromRGBO(0, 0, 0, 0.1),
-          offset: Offset(4, 4),
-          blurRadius: 15,
-        ),
-      ], color: whiteColor, borderRadius: BorderRadius.circular(12)),
-    );
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.1),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+          ),
+        ], color: whiteColor, borderRadius: BorderRadius.circular(12)),
+      );
+    });
   }
 
   placeHolder(Color color, String text) => Row(
@@ -143,30 +199,42 @@ class FormCard extends StatelessWidget {
   const FormCard({Key key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width*0.8,
-      height: MediaQuery.of(context).size.height * 0.19,
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      child: child,
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color.fromRGBO(0, 0, 0, 0.1),
-          offset: Offset(4, 4),
-          blurRadius: 15,
-        ),
-      ], color: whiteColor, borderRadius: BorderRadius.circular(15)),
-    );
+    return ResponsiveWidget(builder: (context, info) {
+      var isSmall = info.deviceType == DeviceScreenType.XMobile;
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: isSmall
+            ? MediaQuery.of(context).size.height * 0.26
+            : MediaQuery.of(context).size.height * 0.19,
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        child: child,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.4),
+            offset: Offset(4, 4),
+            blurRadius: 15,
+          ),
+        ], color: whiteColor, borderRadius: BorderRadius.circular(15)),
+      );
+    });
   }
 }
-
 
 //amount card
 
 class AmountCard extends StatelessWidget {
+
+ final  String amount;
+
+  const AmountCard({Key key, this.amount}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+    return ResponsiveWidget(builder: (context, info) {
+      var isSmall = info.deviceType == DeviceScreenType.XMobile;
+      return Container(
+        height: isSmall
+            ? MediaQuery.of(context).size.height * 0.15
+            : MediaQuery.of(context).size.height * 0.1,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Column(
@@ -175,7 +243,10 @@ class AmountCard extends StatelessWidget {
             children: <Widget>[
               Text(
                 'Estimated Price',
-                style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900),
               ),
               SizedBox(
                 height: 20,
@@ -185,7 +256,7 @@ class AmountCard extends StatelessWidget {
                 children: <Widget>[
                   Text('Total '),
                   Text(
-                    '₦ 1200.00',
+                    '₦ ${amount ?? ''}' ,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )
                 ],
@@ -196,5 +267,6 @@ class AmountCard extends StatelessWidget {
         decoration: BoxDecoration(
             color: greyColor, borderRadius: BorderRadius.circular(8)),
       );
+    });
   }
 }

@@ -5,15 +5,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 saveUser(Map user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   print('user Saved');
-  prefs.setString('user', jsonEncode(user));
+  prefs.setString('userData', jsonEncode(user));
 }
 
-Future retriveUserData() async {
+Future getUserToken() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return jsonDecode(prefs.get('user'));
+  var userData = prefs.get('userData');
+  return userData == null ? '' : jsonDecode(userData)['token'];
+}
+
+Future<Map> retriveUserData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var userData = prefs.get('userData');
+  if (userData == null) {
+    return {};
+  } else {
+    return jsonDecode(userData)['user'];
+  }
 }
 
 logoutUser() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.remove('user');
+  print('logout');
+  prefs.remove('userData');
 }

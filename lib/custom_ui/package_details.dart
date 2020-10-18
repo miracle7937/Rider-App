@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:christian_picker_image/christian_picker_image.dart';
 import 'package:deliveryApp/custom_ui/custom_button.dart';
 import 'package:deliveryApp/custom_ui/custom_form.dart';
+import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/custom_ui/package_preview.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,30 +11,55 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PackageDetails extends StatefulWidget {
+  final double distanceInKilloMeter;
+  final String pickUpLocation, dropLocation;
+
+  PackageDetails(
+      {Key key,
+      this.distanceInKilloMeter,
+      this.pickUpLocation,
+      this.dropLocation})
+      : super(key: key);
+
   @override
   _PackageDetailsState createState() => _PackageDetailsState();
 }
 
 class _PackageDetailsState extends State<PackageDetails> {
   bool _frigile = false;
+
   File _image;
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    try {
+      // final pickedFile = await picker.getImage(source: ImageSource.camera);
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+      // setState(() {
+      //   if (pickedFile != null) {
+      //     _image = File(pickedFile.path);
+      //   } else {
+      //     print('No image selected.');
+      //   }
+      // });
+      List<File> images = await ChristianPickerImage.pickImages(maxImages: 1);
+      print(images);
+    } catch (e) {
+      print(e);
+    }
   }
 
+  final receiverName = TextEditingController();
+  final receiverNumber = TextEditingController();
+  final packageName = TextEditingController();
+  var packageWeight = '';
+  final packageValue = TextEditingController();
+
+  int frigile = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
       backgroundColor: whiteColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -44,64 +71,99 @@ class _PackageDetailsState extends State<PackageDetails> {
           style: TextStyle(color: appColor),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40),
-            child: Column(
-              children: <Widget>[
-                CustomTextForm(
-                  hinText: 'Enter the Receiver’s ful name ',
-                  title: 'Receiver’s Full Name',
-                ),
-                CustomTextForm(
-                  title: 'Receiver’s  Phone Number',
-                  keyboardType: TextInputType.number,
-                  hinText: 'Enter the Receiver’s Phone Number',
-                ),
-                CustomTextForm(
-                  title: 'Package Title',
-                  hinText: 'Enter the package title',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[CustomDropDowm(), customSwitch()],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                CustomTextForm(
-                  title: 'Package Value',
-                  hinText: 'Enter the value in Naira',
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                imageHolder(),
-                SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Center(
-                      child: CustomButton(
-                        title: 'Continue',
-                        callback: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PackagePreview()));
+      body: Builder(builder: (context) {
+        return SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40),
+              child: Column(
+                children: <Widget>[
+                  CustomTextForm(
+                    controller: receiverName,
+                    hinText: 'Enter the Receiver’s ful name ',
+                    title: 'Receiver’s Full Name',
+                  ),
+                  CustomTextForm(
+                    controller: receiverNumber,
+                    title: 'Receiver’s  Phone Number',
+                    keyboardType: TextInputType.number,
+                    hinText: 'Enter the Receiver’s Phone Number',
+                  ),
+                  CustomTextForm(
+                    controller: packageName,
+                    title: 'Package Title',
+                    hinText: 'Enter the package title',
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      CustomDropDowm(
+                        title: 'Weight',
+                        onChange: (value) {
+                          setState(() {
+                            packageWeight = value;
+                          });
                         },
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      customSwitch()
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CustomTextForm(
+                    controller: packageValue,
+                    title: 'Package Value',
+                    hinText: 'Enter the value in Naira',
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  imageHolder(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Center(
+                        child: CustomButton(
+                          title: 'Continue',
+                          callback: () {
+                            if (!checkNullValue()) {
+                              errorSnackBar(
+                                  context, 'All field must be filled');
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PackagePreview(
+                                            pickupLoc: widget.pickUpLocation,
+                                            destinationLoc: widget.dropLocation,
+                                            frigile: frigile,
+                                            packageName: packageName.text,
+                                            packageValue: packageValue.text,
+                                            packageWeight: packageWeight,
+                                            selectedImage: _image,
+                                            distanceInKilloMeter:
+                                                widget.distanceInKilloMeter,
+                                            receiverName: receiverName.text,
+                                            receiverNumber: receiverNumber.text,
+                                          )));
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -118,10 +180,32 @@ class _PackageDetailsState extends State<PackageDetails> {
             onChanged: (value) {
               setState(() {
                 _frigile = value;
+                if (value) {
+                  frigile = 1;
+                } else {
+                  frigile = 0;
+                }
               });
             }),
       ],
     );
+  }
+
+  bool checkNullValue() {
+    print('${receiverName.text.isNotEmpty} ');
+    print(receiverNumber.text.isNotEmpty);
+    print(packageName.text.isNotEmpty);
+    print(packageValue.text.isNotEmpty);
+    print(!widget.distanceInKilloMeter.isNaN);
+    if (receiverName.text.isNotEmpty &&
+        receiverNumber.text.isNotEmpty &&
+        packageName.text.isNotEmpty &&
+        packageValue.text.isNotEmpty &&
+        !widget.distanceInKilloMeter.isNaN) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   imageHolder() => InkWell(

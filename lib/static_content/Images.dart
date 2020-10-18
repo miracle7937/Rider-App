@@ -1,4 +1,4 @@
-class CryptoImage {
+class AssetImages {
   static String sendPackage = 'assets/images/send_package.png';
   static String dot = 'assets/images/dot.png';
   static String triangle = 'assets/images/triangle.png';
@@ -34,5 +34,16 @@ class CryptoImage {
   static String security = 'assets/images/security.png';
   static String email = 'assets/images/email.png';
   static String welcomePageIcon = 'assets/images/welcome_page.png';
+  static String signUpIcon = 'assets/images/signUpIcon.png';
+  static String loginIcon = 'assets/images/loginIcon.png';
+
+
+
+
+  //map images
+    static String pickupImage = 'assets/images/pickuploc.png';
+    static String destinationImage = 'assets/images/dest.png';
+
+
 
 }

@@ -20,6 +20,7 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   final key = GlobalKey<ScaffoldState>();
+
   String otp = '';
 
   Future<void> moveToNext(BuildContext context,
@@ -29,10 +30,10 @@ class _OTPScreenState extends State<OTPScreen> {
       smsCode: smsCode,
     );
     print(credential);
-    showSnack(success: true, message: 'Phone Verification Successful');
     //do the cgeckings here if credential not null move to next page
 
     await FirebaseAuth.instance.signInWithCredential(credential).then((user) {
+      showSnack(success: true, message: 'Phone Verification Successful');
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -61,7 +62,9 @@ class _OTPScreenState extends State<OTPScreen> {
         key: key,
         backgroundColor: appColor,
         body: CustomAuthWidget(
+            isloading: false,
             callback: () {
+              print('hello');
               moveToNext(context,
                   verificationId: widget.verificationId, smsCode: otp);
             },
@@ -90,9 +93,10 @@ class _OTPScreenState extends State<OTPScreen> {
               // controller: textEditingController,
               onCompleted: (v) {
                 otp = v;
+                print(v);
               },
               onChanged: (value) {
-                otp = value;
+                // otp = value;
               },
               beforeTextPaste: (text) {
                 print("Allowing to paste $text");

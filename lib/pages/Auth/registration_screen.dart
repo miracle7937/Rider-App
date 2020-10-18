@@ -65,11 +65,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // verifyPhone('+2348168307987');
-        },
-      ),
+      
       key: key,
       backgroundColor: appColor,
       body: Builder(builder: (context) {

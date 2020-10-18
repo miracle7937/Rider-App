@@ -27,7 +27,7 @@ class BankPaymentScreen extends StatelessWidget {
                 height: 20,
               ),
               customListTile(context,
-                  title: 'STANBIC IBTC', image: CryptoImage.bankIcon),
+                  title: 'STANBIC IBTC', image: AssetImages.bankIcon),
               customListTile(
                 context,
                 title: 'Account NO:',
@@ -71,7 +71,7 @@ class BankPaymentScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 17.0),
             child: Row(
               children: <Widget>[
-                image != null ? Image.asset(CryptoImage.bankIcon) : Container(),
+                image != null ? Image.asset(AssetImages.bankIcon) : Container(),
                 Text(
                   title,
                   style: TextStyle(fontSize: 18),

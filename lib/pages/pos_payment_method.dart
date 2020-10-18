@@ -25,7 +25,7 @@ class POSPaymentScreen extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Image.asset(CryptoImage.posImage),
+            Image.asset(AssetImages.posImage),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),

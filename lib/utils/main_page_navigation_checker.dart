@@ -9,15 +9,15 @@ class PageDecider {
   static Future<Widget> selectedPage() async {
     var alreadyOnBoard =
         await OnboardingPref.isnewUser(); //for new unBoarder user
-
     var user = await retriveUserData();
+    print(user.isEmpty);
     print(user);
     if (!alreadyOnBoard) {
       return OnboardingScreen();
-    } else if (user != null) {
-      return Dashboard();
+    } else if (user.isEmpty) {
+      return SignInScreen();
     } else {
-      return SignUpScreen();
+      return Dashboard();
     }
   }
 }

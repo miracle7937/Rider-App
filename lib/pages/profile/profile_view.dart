@@ -34,7 +34,7 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
             //   height: 50,
             //   width: 50,
             //   child:  CachedNetworkImage(
-            //     imageUrl: CryptoImage.userImage,
+            //     imageUrl: AssetImages.userImage,
             //     placeholder: (context, url) => CircularProgressIndicator(),
             //     errorWidget: (context, url, error) => Icon(Icons.error),
             //   ),
@@ -44,7 +44,7 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
               width: 100,
               height: 100,
               child: Image.asset(
-                CryptoImage.userImage,
+                AssetImages.userImage,
                 fit: BoxFit.cover,
               ),
               decoration: BoxDecoration(shape: BoxShape.circle),
@@ -73,7 +73,7 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
 
             dividerLisTile(
                 title: 'Wallet',
-                icon: CryptoImage.userwallet,
+                icon: AssetImages.userwallet,
                 amount: 'N 200.00'),
             dividerLisTile(
               title: 'Order',
@@ -81,18 +81,18 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => OrderScreen()));
               },
-              icon: CryptoImage.order,
+              icon: AssetImages.order,
             ),
             dividerLisTile(
               callback: () {
                 contactUsDialog();
               },
               title: 'Contact Us',
-              icon: CryptoImage.contactuse,
+              icon: AssetImages.contactuse,
             ),
             dividerLisTile(
               title: 'LogOut',
-              icon: CryptoImage.logOut,
+              icon: AssetImages.logOut,
             ),
             Spacer(),
             CustomButton(
