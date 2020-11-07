@@ -166,9 +166,9 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
                     ),
                     CustomButton(
                       callback: () {
-                        if (pickupLatLng == null &&
-                            destinationLatLng == null &&
-                            matrixController?.amount == null) {
+                        //pickupLatLng == null &&
+                        //                             destinationLatLng == null &&
+                        if (matrixController?.amount == null) {
                           errorSnackBar(
                               context, 'select pick up and drop locations');
                         } else {
@@ -326,7 +326,8 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
   checksIfAllLocationIsSelected() {
     polylineCoordinates.clear();
     polylines.clear(); //marking it empty
-    markers.clear(); //clear all maker
+    markers.clear(); //
+    // clear all maker
     if (pickupLatLng != null && destinationLatLng != null) {
       _getPolyline();
 
@@ -350,6 +351,9 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
   }
 
   onSelectAgain() {
+    setState(() {
+      matrixController = null;
+    });
     if (pickupLatLng != null && destinationLatLng != null) {
       setState(() {});
     }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
+import 'package:deliveryApp/custom_ui/loading_dialog.dart';
 import 'package:deliveryApp/pages/main_page.dart';
 import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
@@ -27,110 +28,125 @@ class _SuccessOrderState extends State<SuccessOrder> {
     super.initState();
   }
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);
       },
-      child: Screenshot(
-        controller: screenshotController,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            centerTitle: true,
-            leading: Text(''),
+      child: LoadingWidget(
+        isLoading: isLoading,
+        child: Screenshot(
+          controller: screenshotController,
+          child: Scaffold(
             backgroundColor: Colors.white,
-            elevation: 0,
-            title: Text(
-              'Order Received',
-              style: TextStyle(color: appColor),
-            ),
-          ),
-          body: Builder(builder: (context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Text(
-                    'Your Order has been received',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      height: 150,
-                      child: Lottie.asset(AssetImages.main_success,
-                          repeat: false)),
-                  Text(
-                    'Your Order code is',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  placeholder(context, widget.requstCode),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Use code to confirm order when your rider arrives ',
-                    style: TextStyle(fontSize: 12),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Spacer(),
-                  InkWell(
-                    onTap: () {
-                      screenshotController
-                          .capture(delay: Duration(seconds: 3))
-                          .then((File image) async {
-                        print("image path  ${image.path}");
-
-                        await ImageGallerySaver.saveImage(
-                            image.readAsBytesSync());
-                        print("File Saved to Gallery");
-                        successSnackBar(context,
-                            'order code has been save to your gallery');
-                        Future.delayed(Duration(seconds: 3)).whenComplete(() {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainPage()));
-                        });
-                      }).catchError((onError) {
-                        print(onError);
-                      });
-                    },
-                    child: SizedBox(
-                        height: 100,
-                        child: Lottie.asset(
-                          AssetImages.fingerPrint,
-                        )),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Tap to save order in your gallery',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300,
-                            fontStyle: FontStyle.italic),
-                      )),
-                  SizedBox(
-                    height: 50,
-                  ),
-                ],
+            appBar: AppBar(
+              centerTitle: true,
+              leading: Text(''),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              title: Text(
+                'Order Received',
+                style: TextStyle(color: appColor),
               ),
-            );
-          }),
+            ),
+            body: Builder(builder: (context) {
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Text(
+                      'Your Order has been received',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                        height: 150,
+                        child: Lottie.asset(AssetImages.main_success,
+                            repeat: false)),
+                    Text(
+                      'Your Order code is',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    placeholder(context, widget.requstCode),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Use code to confirm order when your rider arrives ',
+                      style: TextStyle(fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        screenshotController
+                            .capture(delay: Duration(seconds: 3))
+                            .then((File image) async {
+                          print("image path  ${image.path}");
+                          setState(() {
+                            isLoading = false;
+                          });
+                          await ImageGallerySaver.saveImage(
+                              image.readAsBytesSync());
+                          print("File Saved to Gallery");
+                          successSnackBar(context,
+                              'order code has been save to your gallery');
+                          Future.delayed(Duration(seconds: 3)).whenComplete(() {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainPage()));
+                          });
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }).catchError((onError) {
+                          print(onError);
+                          setState(() {
+                            isLoading = false;
+                          });
+                        });
+                      },
+                      child: SizedBox(
+                          height: 100,
+                          child: Lottie.asset(
+                            AssetImages.fingerPrint,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                        width: 150,
+                        child: Text(
+                          'Tap to save order in your gallery',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              fontStyle: FontStyle.italic),
+                        )),
+                    SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

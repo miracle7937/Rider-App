@@ -1,4 +1,3 @@
-var kGoogleApiKey = 'AIzaSyCpbh54i-Oni3hY570G_uN6NlcRaoGa62M';
-var payStackKey =
-    'pk_test_5c17f078fa6e5a22620443716766d234734e0717'; //'pk_test_07f7702d01f75e7214f7a98595d9673ff29fcae5';
+var kGoogleApiKey = 'AIzaSyC3k-0cLxoOk_BKDQeJyLPrVF_2k3sAMP';
+var payStackKey = 'pk_live_c98a0c24f90f25a4c3b76a922c97e3a2fadc00ca';
 var onSignalKey = "e47d7647-843f-4465-a63a-1b0f285c9534";
