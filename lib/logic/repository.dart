@@ -10,17 +10,11 @@ class Repository {
   final File file;
   final String path;
   final BuildContext context;
-  Repository(
-    this.serverData,
-    this.context,
-    this.path, [
-    this.data,
-    this.file
-  ]);
+  Repository(this.serverData, this.context, this.path, [this.data, this.file]);
 
   Future<HttpResponse> post() async {
     print('Post Request to $path');
-    var value = await serverData.postData(path: path, body: data);
+    var value = await serverData.postData(context,path: path, body: data);
     print(value.runtimeType);
     if (value.runtimeType == HttpException) {
       errorSnackBar(context, value.data['message'].toString());
@@ -33,7 +27,7 @@ class Repository {
 
   Future<HttpResponse> get() async {
     print('Get Request to $path');
-    HttpResponse value = await serverData.getData(
+    HttpResponse value = await serverData.getData(context,
       path: path,
     );
     if (value.runtimeType == HttpException) {
@@ -47,7 +41,7 @@ class Repository {
 
   Future<HttpResponse> put() async {
     print('Post Request to $path');
-    var value = await serverData.putData(path: path, body: data);
+    var value = await serverData.putData(context,path: path, body: data);
     print(value.runtimeType);
     if (value.runtimeType == HttpException) {
       errorSnackBar(context, value.data['message'].toString());
@@ -58,9 +52,9 @@ class Repository {
     }
   }
 
-  getNO() async {
+  Future<HttpResponse> getNO() async {
     print('Get Request to $path');
-    HttpResponse value = await serverData.getData(
+    HttpResponse value = await serverData.getData(context,
       path: path,
     );
     if (value.runtimeType == HttpException) {
@@ -70,23 +64,40 @@ class Repository {
       return value;
     }
   }
-
-  Future<HttpResponse> putNO() async {
+  Future<HttpResponse> postNO() async {
     print('Post Request to $path');
-    var value = await serverData.putData(path: path, body: data);
+    var value = await serverData.postData(context, path: path, body: data);
     print(value.runtimeType);
     if (value.runtimeType == HttpException) {
-      // errorSnackBar(context, value.data['message'].toString());
+    
       return null;
     } else {
-      // successSnackBar(context, (value.data['message']).toString());
+      
+      return value;
+    }
+  }
+  Future<HttpResponse> putNO() async {
+    print('Post Request to $path');
+    var value = await serverData.putData(context,path: path, body: data);
+    print(value.runtimeType);
+    if (value.runtimeType == HttpException) {
+    
+      return null;
+    } else {
+      
       return value;
     }
   }
 
   Future<HttpResponse> makeRequest() async {
     print('Post Request to $path');
-    var value = await serverData.uploadFile(path: path, body: data, file: file);
+    var value = file != null
+        ? await serverData.uploadFile(context,path: path, body: data, file: file)
+        : await serverData.uploadNoFile(
+          context,
+            path: path,
+            body: data,
+          );
     print(value.runtimeType);
     if (value.runtimeType == HttpException) {
       errorSnackBar(context, 'error occurred');

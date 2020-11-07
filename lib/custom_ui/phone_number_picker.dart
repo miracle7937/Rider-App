@@ -58,7 +58,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final bool formatInput;
   final bool autoFocus;
   final bool autoFocusSearch;
-  final bool autoValidate;
+  final AutovalidateMode autoValidateMode;
   final bool ignoreBlank;
   final bool countrySelectorScrollControlled;
 
@@ -94,7 +94,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.formatInput = true,
       this.autoFocus = false,
       this.autoFocusSearch = false,
-      this.autoValidate = false,
+      this.autoValidateMode = AutovalidateMode.disabled,
       this.ignoreBlank = false,
       this.countrySelectorScrollControlled = true,
       this.locale,
@@ -155,7 +155,10 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
   void initialiseWidget() async {
     if (widget.initialValue != null) {
       if (widget.initialValue.phoneNumber != null &&
-          widget.initialValue.phoneNumber.isNotEmpty) {
+          widget.initialValue.phoneNumber.isNotEmpty &&
+          await PhoneNumberUtil.isValidPhoneNumber(
+              phoneNumber: widget.initialValue.phoneNumber,
+              isoCode: widget.initialValue.isoCode)) {
         controller.text =
             await PhoneNumber.getParsableNumber(widget.initialValue);
 
@@ -169,6 +172,12 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
     if (this.mounted) {
       List<Country> countries =
           CountryProvider.getCountriesData(countries: widget.countries);
+
+      final CountryComparator countryComparator =
+          widget.selectorConfig?.countryComparator;
+      if (countryComparator != null) {
+        countries.sort(countryComparator);
+      }
 
       Country country = Utils.getInitialSelectedCountry(
         countries,
@@ -189,7 +198,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
       String parsedPhoneNumberString =
           controller.text.replaceAll(RegExp(r'[^\d+]'), '');
 
-      getParsedPhoneNumber(parsedPhoneNumberString, this.country?.countryCode)
+      getParsedPhoneNumber(parsedPhoneNumberString, this.country?.alpha2Code)
           .then((phoneNumber) {
         if (phoneNumber == null) {
           String phoneNumber =
@@ -198,7 +207,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
           if (widget.onInputChanged != null) {
             widget.onInputChanged(PhoneNumber(
                 phoneNumber: phoneNumber,
-                isoCode: this.country?.countryCode,
+                isoCode: this.country?.alpha2Code,
                 dialCode: this.country?.dialCode));
           }
 
@@ -210,7 +219,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
           if (widget.onInputChanged != null) {
             widget.onInputChanged(PhoneNumber(
                 phoneNumber: phoneNumber,
-                isoCode: this.country?.countryCode,
+                isoCode: this.country?.alpha2Code,
                 dialCode: this.country?.dialCode));
           }
 
@@ -297,7 +306,7 @@ class _InputWidgetView
 
   @override
   Widget build(BuildContext context) {
-    final countryCode = state?.country?.countryCode ?? '';
+    final countryCode = state?.country?.alpha2Code ?? '';
     final dialCode = state?.country?.dialCode ?? '';
 
     return Container(
@@ -341,7 +350,7 @@ class _InputWidgetView
               decoration: state.getInputDecoration(widget.inputDecoration),
               onEditingComplete: widget.onSubmit,
               onFieldSubmitted: widget.onFieldSubmitted,
-              autovalidate: widget.autoValidate,
+              autovalidateMode: widget.autoValidateMode,
               validator: widget.validator ?? state.validator,
               onSaved: widget.onSaved,
               inputFormatters: [
@@ -354,7 +363,7 @@ class _InputWidgetView
                           state.controller.value = value;
                         },
                       )
-                    : WhitelistingTextInputFormatter.digitsOnly,
+                    : FilteringTextInputFormatter.digitsOnly,
               ],
               onChanged: state.onChanged,
             ),

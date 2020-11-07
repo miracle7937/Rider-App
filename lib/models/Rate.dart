@@ -7,7 +7,7 @@ class RateModel {
 
   RateModel({this.rate});
   factory RateModel.fromJson(Map value) {
-    return RateModel(rate: value['data']['rate']);
+    return RateModel(rate: int.parse(value['data']['rate']));
   }
 }
 

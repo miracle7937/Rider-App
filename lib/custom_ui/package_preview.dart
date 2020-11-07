@@ -7,6 +7,7 @@ import 'package:deliveryApp/models/walletModel.dart';
 import 'package:deliveryApp/pages/select_payment_method_screen.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PackagePreview extends StatefulWidget {
   final String receiverName;
@@ -14,6 +15,7 @@ class PackagePreview extends StatefulWidget {
   final String packageName;
   final String packageWeight;
   final String packageValue;
+  final amount;
 
   final File selectedImage;
   final double distanceInKilloMeter;
@@ -22,6 +24,7 @@ class PackagePreview extends StatefulWidget {
 
   const PackagePreview(
       {Key key,
+      this.amount,
       this.receiverName,
       this.receiverNumber,
       this.packageName,
@@ -39,25 +42,13 @@ class PackagePreview extends StatefulWidget {
 }
 
 class _PackagePreviewState extends State<PackagePreview> {
-  String amount;
   String userWalletAmount;
 
   @override
   void initState() {
-    getAmount();
+    getWalletAmount();
 
     super.initState();
-  }
-
-  getAmount() async {
-    getRate(context).then((value) {
-      setState(() {
-        amount = (value.rate * widget.distanceInKilloMeter).toStringAsFixed(2);
-        print(value.rate);
-      });
-    }).whenComplete(() {
-      getWalletAmount();
-    });
   }
 
   getWalletAmount() async {
@@ -79,7 +70,7 @@ class _PackagePreviewState extends State<PackagePreview> {
     map['package_value'] = int.parse(widget.packageValue);
     map['fragile'] = widget.frigile;
 
-    map['payment_amount'] = double.parse(amount);
+    map['payment_amount'] = double.parse(widget.amount.toString());
     map['package_title'] = widget.packageName;
     return map;
   }
@@ -87,7 +78,6 @@ class _PackagePreviewState extends State<PackagePreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -260,7 +250,8 @@ class _PackagePreviewState extends State<PackagePreview> {
                               width: MediaQuery.of(context).size.width * 0.5,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: FileImage(widget.selectedImage)),
+                                      image: FileImage(widget.selectedImage),
+                                      fit: BoxFit.fill),
                                   color: greyColor,
                                   borderRadius: BorderRadius.circular(12)),
                             ),
@@ -276,7 +267,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                 height: 20,
               ),
               AmountCard(
-                amount: amount,
+                amount: widget.amount,
               ),
               SizedBox(
                 height: 20,
@@ -291,7 +282,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                                 userWalletAmount: userWalletAmount,
                                 data: addToMap(),
                                 selectedFile: widget.selectedImage,
-                                amount: amount,
+                                amount: widget.amount,
                               )));
                     },
                   ),

@@ -98,7 +98,9 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                             },
                             decoration: getInputStyle(icon: AssetImages.email)),
                         CustomTextForm(
+                          passwords: true,
                           onFieldSubmitted: (_) {
+                            
                             _passwordFocusNode.unfocus();
                           },
                           validator: passwordValidation,
@@ -126,11 +128,11 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
 
                                     NewUser(ServerData(), '/register', context,
                                         data: {
-                                          "firstname": "Frank",
-                                          "lastname": "Dray",
+                                          "firstname": firstName.text,
+                                          "lastname": lastnaeme.text,
                                           "phone": widget.phoneNumber,
-                                          "email": "user1@mail.com",
-                                          "password": "PassWord12345"
+                                          "email": email.text,
+                                          "password": password.text
                                         }).post().then((value) {
                                       print('chi $value');
 

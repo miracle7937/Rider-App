@@ -1,5 +1,4 @@
 import 'package:deliveryApp/custom_ui/customizing_splashScreen.dart';
-import 'package:deliveryApp/pages/Auth/SignupPage.dart';
 import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:deliveryApp/utils/main_page_navigation_checker.dart';
@@ -17,8 +16,9 @@ class SplashScreenPage extends StatelessWidget {
         return FutureBuilder<Widget>(
             future: PageDecider.selectedPage(),
             builder: (context, snapshot) {
+              print(snapshot.data);
               return MySplashScreen(
-                seconds: 3,
+                seconds: 5,
                 navigateAfterSeconds:snapshot.data, //snapshot.data,
                 title: Text(
                   'Welcome to Band of Riders',

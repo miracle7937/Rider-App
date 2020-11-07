@@ -1,7 +1,6 @@
 import 'package:deliveryApp/http_request.dart';
 import 'package:deliveryApp/logic/authentication/register_newuser.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 class WalletModel {
   final String amount;
@@ -14,7 +13,7 @@ class WalletModel {
 
 Future<WalletModel> getWallet(BuildContext context) async {
   var data = await UserWallet(ServerData(), '/wallet', context).getNO();
-  var wallet = WalletModel.fromJson(data.data);
+  var wallet = WalletModel.fromJson(data?.data);
   return wallet;
 }
 

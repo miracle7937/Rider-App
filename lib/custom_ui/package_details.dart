@@ -13,12 +13,14 @@ import 'package:image_picker/image_picker.dart';
 class PackageDetails extends StatefulWidget {
   final double distanceInKilloMeter;
   final String pickUpLocation, dropLocation;
+  final amount;
 
   PackageDetails(
+
       {Key key,
-      this.distanceInKilloMeter,
+      this.distanceInKilloMeter =1.9,
       this.pickUpLocation,
-      this.dropLocation})
+      this.dropLocation, this.amount})
       : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class PackageDetails extends StatefulWidget {
 }
 
 class _PackageDetailsState extends State<PackageDetails> {
+  
   bool _frigile = false;
 
   File _image;
@@ -34,16 +37,19 @@ class _PackageDetailsState extends State<PackageDetails> {
   Future getImage() async {
     try {
       // final pickedFile = await picker.getImage(source: ImageSource.camera);
+      List<File> pickedFile =
+          await ChristianPickerImage.pickImages(maxImages: 1);
 
-      // setState(() {
-      //   if (pickedFile != null) {
-      //     _image = File(pickedFile.path);
-      //   } else {
-      //     print('No image selected.');
-      //   }
-      // });
-      List<File> images = await ChristianPickerImage.pickImages(maxImages: 1);
-      print(images);
+      setState(() {
+        if (pickedFile.isNotEmpty) {
+          // _image = File(pickedFile.path);
+          _image = pickedFile[0];
+        } else {
+          print('No image selected.');
+        }
+      });
+
+      print(pickedFile);
     } catch (e) {
       print(e);
     }
@@ -52,14 +58,14 @@ class _PackageDetailsState extends State<PackageDetails> {
   final receiverName = TextEditingController();
   final receiverNumber = TextEditingController();
   final packageName = TextEditingController();
-  var packageWeight = '';
+  var packageWeight =  "0-10kg";
   final packageValue = TextEditingController();
 
   int frigile = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      // floatingActionButton: FloatingActionButton(onPressed: () {}),
       backgroundColor: whiteColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -81,7 +87,7 @@ class _PackageDetailsState extends State<PackageDetails> {
                 children: <Widget>[
                   CustomTextForm(
                     controller: receiverName,
-                    hinText: 'Enter the Receiver’s ful name ',
+                    hinText: 'Enter the Receiver’s fullname ',
                     title: 'Receiver’s Full Name',
                   ),
                   CustomTextForm(
@@ -140,6 +146,7 @@ class _PackageDetailsState extends State<PackageDetails> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => PackagePreview(
+                                        amount: widget.amount.toString(),
                                             pickupLoc: widget.pickUpLocation,
                                             destinationLoc: widget.dropLocation,
                                             frigile: frigile,

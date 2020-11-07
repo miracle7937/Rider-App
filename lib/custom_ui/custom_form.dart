@@ -1,7 +1,7 @@
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 
-class CustomTextForm extends StatelessWidget {
+class CustomTextForm extends StatefulWidget {
   final String title, hinText, errorText;
   final TextInputType keyboardType;
   final InputDecoration decoration;
@@ -11,10 +11,12 @@ class CustomTextForm extends StatelessWidget {
   final FocusNode focusNode;
   final Function(String) validator, onFieldSubmitted;
   final Function(String) onChange;
-  final bool obscureText;
+
+  final Color color;
+  final bool passwords;
   const CustomTextForm(
       {Key key,
-      this.obscureText = false,
+      this.passwords = false,
       this.onChange,
       this.controller,
       this.onFieldSubmitted,
@@ -27,52 +29,77 @@ class CustomTextForm extends StatelessWidget {
       this.title,
       this.hinText,
       this.errorText,
-      this.keyboardType = TextInputType.text})
+      this.keyboardType = TextInputType.text,
+      this.color})
       : super(key: key);
 
+  @override
+  _CustomTextFormState createState() => _CustomTextFormState();
+}
+
+class _CustomTextFormState extends State<CustomTextForm> {
+  bool showPassword = true;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        title != null
+        widget.title != null
             ? Text(
-                title,
-                style: titleStyle,
+                widget.title,
+                style: widget.titleStyle,
               )
             : Container(),
         SizedBox(
           height: 10,
         ),
-        TextFormField(
-          onChanged: onChange,
-          obscureText: obscureText,
-          validator: validator,
-          onFieldSubmitted: onFieldSubmitted,
-          focusNode: focusNode,
-          controller: controller,
-          cursorColor: greenColor,
-          style: inputStyle,
-          keyboardType: this.keyboardType,
-          decoration: decoration ??
-              InputDecoration(
-                errorText: errorText,
-                hintText: hinText,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: greyColor)),
-                focusColor: appColor,
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(color: appColor, width: 2)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: appColor,
-                    )),
-              ),
+        Container(
+          height:50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: widget.color,
+          ),
+          child: TextFormField(
+            onChanged: widget.onChange,
+            obscureText:  widget.passwords? showPassword: false,
+            validator: widget.validator,
+            onFieldSubmitted: widget.onFieldSubmitted,
+            focusNode: widget.focusNode,
+            controller: widget.controller,
+            cursorColor: greenColor,
+            style: widget.inputStyle,
+            keyboardType: this.widget.keyboardType,
+            decoration: widget.decoration ??
+                InputDecoration(
+                  suffix: widget.passwords
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                          child: showPassword
+                              ? Icon(Icons.visibility_off)
+                              : Icon(Icons.visibility))
+                      : null,
+                  errorText: widget.errorText,
+                  hintText: widget.hinText,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: greyColor)),
+                  focusColor: appColor,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: appColor, width: 2)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: appColor,
+                      )),
+                ),
+          ),
         ),
-        this.shrinkBottom == true ? SizedBox() : SizedBox(height: 20),
+        this.widget.shrinkBottom == true ? SizedBox() : SizedBox(height: 20),
       ],
     );
   }

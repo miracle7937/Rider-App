@@ -5,6 +5,7 @@ import 'package:deliveryApp/custom_ui/custom_card.dart';
 import 'package:deliveryApp/custom_ui/custom_form.dart';
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/http_request.dart';
+import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
 import 'package:deliveryApp/pref/localized_user_data.dart';
 import 'package:deliveryApp/static_content/API_KEY.dart';
 import 'package:deliveryApp/static_content/String.dart';
@@ -13,6 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 
 class FundWalletScreen extends StatefulWidget {
+  final bool forDashboard;
+
+  const FundWalletScreen({Key key, this.forDashboard = false})
+      : super(key: key);
   @override
   _FundWalletScreenState createState() => _FundWalletScreenState();
 }
@@ -33,89 +38,91 @@ class _FundWalletScreenState extends State<FundWalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        getUserToken().then((value) {
-          print(value);
-        });
-      }),
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
+    return ConnectivityWidget(
+      child: Scaffold(
+        // floatingActionButton: FloatingActionButton(onPressed: () {
+        //   getUserToken().then((value) {
+        //     print(value);
+        //   });
+        // }),
         backgroundColor: Colors.white,
-        title: Text(
-          'Fund Wallet',
-          style: TextStyle(color: appColor),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: Text(
+            'Fund Wallet',
+            style: TextStyle(color: appColor),
+          ),
         ),
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Builder(builder: (context) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                CustomCard(
-                  forWallet: true,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Fund your wallet with min of N200 and Max N1,000,000',
-                    style: TextStyle(
-                      fontSize: 13,
-                    )),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 20),
-                  child: CustomTextForm(
-                    onChange: (_) {
-                      updateController();
-                    },
-                    controller: controller,
-                    keyboardType: TextInputType.numberWithOptions(
-                        signed: false, decimal: false),
-                    hinText: '₦',
-                    title: 'Enter Amount',
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Builder(builder: (context) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CustomCard(
+                    forWallet: true,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Wrap(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Fund your wallet with min of N200 and Max N1,000,000',
+                      style: TextStyle(
+                        fontSize: 13,
+                      )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 20),
+                    child: CustomTextForm(
+                      onChange: (_) {
+                        updateController();
+                      },
+                      controller: controller,
+                      keyboardType: TextInputType.numberWithOptions(
+                          signed: false, decimal: false),
+                      hinText: '₦',
+                      title: 'Enter Amount',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Wrap(
+                      children: [
+                        Text(
+                            'N ${controller.text} will be credited to your wallet')
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                  Column(
                     children: [
-                      Text(
-                          'N ${controller.text} will be credited to your wallet')
+                      CustomButton(
+                          callback: () {
+                            if (controller.text.isNotEmpty &&
+                                int.parse(controller.text) < 199) {
+                              errorSnackBar(
+                                  context, 'amount to small to fund wallet ');
+                            } else {
+                              chargeCard(int.parse(controller.text));
+                            }
+                          },
+                          title: 'Continue to Pay'),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                ),
-                Column(
-                  children: [
-                    CustomButton(
-                        callback: () {
-                          if (controller.text.isNotEmpty &&
-                              int.parse(controller.text) < 50) {
-                            errorSnackBar(
-                                context, 'amount to small to fund wallet ');
-                          } else {
-                            chargeCard(int.parse(controller.text));
-                          }
-                        },
-                        title: 'Continue to Pay'),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
-          );
-        }),
+                  SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -133,7 +140,7 @@ class _FundWalletScreenState extends State<FundWalletScreen> {
     );
     if (response.status == true) {
       print("reference ${response.reference}");
-      ServerData().putData(
+      ServerData().putData(context,
           path: '/wallet/add',
           body: {"amount": controller.text, "reference": response.reference});
 
@@ -251,7 +258,20 @@ class _FundWalletScreenState extends State<FundWalletScreen> {
                 "Your payment has been successfully",
                 style: TextStyle(fontSize: 13),
               ),
-              Text("processed.", style: TextStyle(fontSize: 13)),
+              FlatButton(
+                  child: Text("processed.",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    if (widget.forDashboard) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    }
+                  })
             ],
           ),
         ),

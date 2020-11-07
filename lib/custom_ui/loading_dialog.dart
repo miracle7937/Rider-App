@@ -1,3 +1,4 @@
+import 'package:deliveryApp/static_content/Images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -23,10 +24,10 @@ class LoadingWidget extends StatelessWidget {
                   children: <Widget>[
                     Center(
                       child: SizedBox(
-                          height: 100,
-                          width: 100,
+                          // height: 100,
+                          // width: 100,
                           child:
-                              Lottie.asset('assets/images/8774-loading.json')),
+                              Lottie.asset(AssetImages.loading)),
                     ),
                   ],
                 ),

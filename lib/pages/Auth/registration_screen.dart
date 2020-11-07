@@ -86,6 +86,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           subTitle: 'Join us to send and receive package',
           btnText: 'Continue',
           form: InternationalPhoneNumberInput(
+            autoFocus: true,
             countries: ['NG'],
             textStyle: TextStyle(
               color: Colors.white,
@@ -110,7 +111,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 verifyPhone(phoneNumber);
               }
             },
-            autoValidate: false,
+         
             selectorTextStyle: TextStyle(color: Colors.white),
           ),
         );

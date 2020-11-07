@@ -4,12 +4,13 @@ SHA-1 required for both platforms
 
 
 
-//i have not save user locally i just mock it
+
 
 
 
 //set up for ios google map
 
+location permission for both andriod and ios
 
 
 bandriders3@gmail.com

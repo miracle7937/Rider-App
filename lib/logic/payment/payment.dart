@@ -14,37 +14,51 @@ enum ChoosePayment {
 }
 
 abstract class PaymentRepo {
-  void payWithCard(Map data);
-  void payWithWallet(
+  Future<HttpResponse> payWithCard(BuildContext context, Map data, File file);
+  Future<HttpResponse> payWithWallet(
       num amount, num wallet, BuildContext context, Map data, File file);
-  void payWithCardOnPickUp(Map data);
-  void payWithBankTransfer(Map data);
+  Future<HttpResponse> payWithBankTransfer(BuildContext context, Map data, File file);
 }
 
 class Payment extends PaymentRepo {
   @override
-  void payWithBankTransfer(data) {}
+  Future<HttpResponse> payWithBankTransfer(BuildContext context, Map userRequestData, File file) async{
+   userRequestData['payment_type'] = 'Wallet';
+    var value = await DeductWallet(ServerData(), '/order', context,
+                data:  userRequestData, file: file)
+            .makeRequest();
 
-  @override
-  void payWithCard(data) {
-    //to check if the user have enough
+        return value;
+    
   }
 
   @override
-  void payWithCardOnPickUp(data) {}
+  Future<HttpResponse> payWithCard(BuildContext context, Map userRequestData, File file) async{
+
+    var value = await DeductWallet(ServerData(), '/order', context,
+                data:  userRequestData, file: file)
+            .makeRequest();
+
+        return value;
+    
+          
+  }
+
+ 
 
   @override
-  void payWithWallet(amount, wallet, context, userRequestData, file) async {
-    // var data = await getWallet(context);
+  Future<HttpResponse> payWithWallet(amount, wallet, context, userRequestData, file) async {
+ 
+    userRequestData['payment_type'] = 'Wallet';
     if (wallet > amount) {
       var data = await deducetWallet(context, amount: amount.toString());
       if (data != null) {
         ///post data
-        DeductWallet(ServerData(), '/order', context, data: userRequestData, file: file)
-            .makeRequest()
-            .then((value) {
-          print(value);
-        });
+        var value = await DeductWallet(ServerData(), '/order', context,
+                data: userRequestData, file: file)
+            .makeRequest();
+
+        return value;
       }
     } else {
 // navigator to  toup page
@@ -52,6 +66,8 @@ class Payment extends PaymentRepo {
           context, MaterialPageRoute(builder: (context) => FundWalletScreen()));
     }
   }
+
+
 }
 
 //check if the user have enough to cover the expenxis

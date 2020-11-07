@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/utils/responsiveWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class MySplashScreen extends StatefulWidget {
   final int seconds;
@@ -13,7 +14,7 @@ class MySplashScreen extends StatefulWidget {
   final double photoSize;
   final dynamic onClick;
   final Color loaderColor;
-  final Image image;
+  final Widget image;
   final Text loadingText;
   final ImageProvider imageBackground;
   final Gradient gradientBackground;
@@ -96,7 +97,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
                           
                           child: widget.title),
                           SizedBox(
-                            height: 20,
+                            height: 40,
                           ),
                           CircularProgressIndicator(
                           strokeWidth: 1,
@@ -119,7 +120,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
                   //     ],
                   //   ),
                   // ),
-                  Image.asset(AssetImages.splashscreenRider)
+                  Lottie.asset(AssetImages.courier, fit:BoxFit.cover),
                 ],
               ),
             ],

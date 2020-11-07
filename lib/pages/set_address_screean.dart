@@ -1,17 +1,23 @@
 import 'dart:collection';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliveryApp/custom_ui/custom_button.dart';
 import 'package:deliveryApp/custom_ui/custom_card.dart';
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/custom_ui/package_details.dart';
+import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
+import 'package:deliveryApp/logic/geolocation/geolocation.dart';
+import 'package:deliveryApp/logic/time_and_price_controller/price_and_time_controller.dart';
 import 'package:deliveryApp/static_content/API_KEY.dart';
 import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as a;
+import 'package:lottie/lottie.dart' as load;
 import 'package:maps_toolkit/maps_toolkit.dart' as cal;
 
 class SetAddressScreen extends StatefulWidget {
@@ -20,6 +26,7 @@ class SetAddressScreen extends StatefulWidget {
 }
 
 class _SetAddressScreenState extends State<SetAddressScreen> {
+  MatrixController matrixController;
   var pickupLocation = 'Set Pick up Address ';
   LatLng pickupLatLng;
 
@@ -38,19 +45,6 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
-
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId("0"),
-          position: LatLng(37.77483, -122.41942),
-          infoWindow: InfoWindow(
-            title: "San Francsico",
-            snippet: "An Interesting city",
-          ),
-        ),
-      );
-    });
   }
 
   double calculateDistanceInKiloMeter({LatLng destination, LatLng pickuploc}) {
@@ -66,123 +60,143 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {
-     
-        print(destinationLocation);
-      }),
-       
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     UserLocation().permit();
+        //   },
+        // ),
         body: Builder(builder: (
           context,
         ) {
-          return Stack(
-            children: <Widget>[
-              GoogleMap(
-                onMapCreated: _onMapCreated,
-                markers: Set<Marker>.of(markers.values),
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(37.77483, -122.41942),
-                  zoom: 12,
-                ),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                polylines: Set<Polyline>.of(polylines.values),
-              ),
-              Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 30,
+          return ConnectivityWidget(
+                      child: Stack(
+              children: <Widget>[
+                GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  markers: Set<Marker>.of(markers.values),
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(6.5244, 3.3792),
+                    zoom: 12,
                   ),
-                  Center(
-                    child: FormCard(
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Image.asset(AssetImages.dot),
-                              Expanded(
-                                  child: VerticalDivider(
-                                thickness: 2,
-                              )),
-                              Image.asset(AssetImages.triangle),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: Column(
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  polylines: Set<Polyline>.of(polylines.values),
+                ),
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Center(
+                      child: FormCard(
+                        child: Row(
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                placeHolder(
-                                    showIcon: true,
-                                    text: pickupLocation,
-                                    callback: () {
-                                      onSelectAgain();
-                                      getPlace().then((value) {
-                                        setState(() {
-                                          pickupLocation = value['description'];
-                                          pickupLatLng = value['latLong'];
-                                        });
-                                      }).whenComplete(() {
-                                        checksIfAllLocationIsSelected();
-                                      });
-                                    }),
-                                Divider(
-                                  thickness: 2,
+                                SizedBox(
+                                  height: 20,
                                 ),
-                                placeHolder(
-                                    callback: () {
-                                      onSelectAgain();
-                                      getPlace().then((value) {
-                                        setState(() {
-                                          destinationLocation =
-                                              value['description'];
-                                          destinationLatLng = value['latLong'];
-                                        });
-                                      }).whenComplete(() {
-                                        checksIfAllLocationIsSelected();
-                                      });
-                                    },
-                                    showIcon: false,
-                                    text: destinationLocation),
+                                Image.asset(AssetImages.dot),
+                                Expanded(
+                                    child: VerticalDivider(
+                                  thickness: 2,
+                                )),
+                                Image.asset(AssetImages.triangle),
+                                SizedBox(
+                                  height: 20,
+                                ),
                               ],
                             ),
-                          )
-                        ],
+                            Expanded(
+                              child: Column(
+                                children: <Widget>[
+                                  placeHolder(
+                                      showIcon: true,
+                                      text: pickupLocation ??
+                                          'Set Pick up Address ',
+                                      callback: () {
+                                        onSelectAgain();
+                                        getPlace().then((value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              pickupLocation =
+                                                  value['description'];
+                                              pickupLatLng = value['latLong'];
+                                            });
+                                          }
+                                        }).whenComplete(() {
+                                          checksIfAllLocationIsSelected();
+                                        });
+                                      }),
+                                  Divider(
+                                    thickness: 2,
+                                  ),
+                                  placeHolder(
+                                      callback: () {
+                                        onSelectAgain();
+                                        getPlace().then((value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              destinationLocation =
+                                                  value['description'];
+                                              destinationLatLng =
+                                                  value['latLong'];
+                                            });
+                                          }
+                                        }).whenComplete(() {
+                                          checksIfAllLocationIsSelected();
+                                        });
+                                      },
+                                      showIcon: false,
+                                      text: destinationLocation ??
+                                          'Set delievry Address '),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Spacer(),
-                  CustomButton(
-                    callback: () {
-                      if (pickupLatLng == null && destinationLatLng == null) {
-                        errorSnackBar(
-                            context, 'select pick up and drop locations');
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PackageDetails(
-                                      pickUpLocation: pickupLocation,
-                                      dropLocation: destinationLocation,
-                                      distanceInKilloMeter:
-                                          calculateDistanceInKiloMeter(
-                                              pickuploc: pickupLatLng,
-                                              destination: destinationLatLng),
-                                    )));
-                      }
-                    },
-                    title: 'Continue',
-                  ),
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
-              ),
-            ],
+                    Spacer(),
+                    matrixController != null
+                        ? timeAndAmountPlacehoder(
+                            matrixController.amount, matrixController.time)
+                        : Container(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomButton(
+                      callback: () {
+                        if (pickupLatLng == null &&
+                            destinationLatLng == null &&
+                            matrixController.amount == null) {
+                          errorSnackBar(
+                              context, 'select pick up and drop locations');
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PackageDetails(
+                                        amount: matrixController.amount,
+                                        pickUpLocation: pickupLocation,
+                                        dropLocation: destinationLocation,
+                                        distanceInKilloMeter:
+                                            calculateDistanceInKiloMeter(
+                                                pickuploc: pickupLatLng,
+                                                destination: destinationLatLng),
+                                      )));
+                        }
+                      },
+                      title: 'Continue',
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           );
         }),
       ),
@@ -218,6 +232,54 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
     return {};
   }
 
+  timeAndAmountPlacehoder(amount, time) {
+    var width = MediaQuery.of(context).size.width;
+    return AnimatedContainer(
+      width: amount == null ? 0 : width * 0.5,
+      duration: Duration(seconds: 4),
+      curve: Curves.easeIn,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
+
+      // margin: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: width * 0.25,
+                height: 60,
+                child: Container(
+                  color: appColor,
+                  child: Center(
+                    child: AutoSizeText(
+                      time,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                )),
+            SizedBox(
+                width: width * 0.25,
+                height: 60,
+                child: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: AutoSizeText(
+                      '₦ ${amount.toString()}',
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+
   placeHolder(
           {@required bool showIcon,
           @required String text,
@@ -227,20 +289,37 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
                 child: Text(
-                  text ?? pickupLocation,
-                  overflow: TextOverflow.fade,
+                  text,
                   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                   ),
                 ),
               ),
-              showIcon ? Image.asset(AssetImages.place) : Container()
+              SizedBox(
+                width: 10,
+              ),
+              showIcon
+                  ? InkWell(
+                      onTap: () {
+                        UserLocation.currentLocation().then((value) {
+                          if (value != null) {
+                            _mapController.animateCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                                    target:
+                                        LatLng(value.latitude, value.longitude),
+                                    zoom: 12.0,
+                                    tilt: 12)));
+                          }
+                        });
+                      },
+                      child: Image.asset(AssetImages.place))
+                  : Container()
             ],
           ),
         ),
@@ -255,11 +334,19 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
 
       _mapController
           .animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(target: pickupLatLng, zoom: 17.0)))
+              CameraPosition(target: pickupLatLng, zoom: 12.0, tilt: 12)))
           .then((value) {
         _addMarker(pickupLatLng, 'pickup location', AssetImages.pickupImage);
         _addMarker(destinationLatLng, 'destination location',
             AssetImages.destinationImage);
+        TimeDistanceController(pickupLatLng, destinationLatLng)
+            .converToAmount()
+            .then((value) {
+              print(' miracle $value');
+          setState(() {
+            matrixController = value;
+          });
+        });
       });
     }
   }
@@ -291,6 +378,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
         geodesic: true,
         polylineId: id,
         color: appColor,
+        width: 5,
         points: polylineCoordinates);
     polylines[id] = polyline;
     setState(() {});

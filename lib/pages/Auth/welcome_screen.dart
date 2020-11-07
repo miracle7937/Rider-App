@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deliveryApp/static_content/Images.dart';
 
-
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -25,10 +24,11 @@ class WelcomeScreen extends StatelessWidget {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.9,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   _button(
-                    image: AssetImages.loginIcon,
+                      context: context,
+                      image: AssetImages.loginIcon,
                       title: 'LOGIN',
                       onTap: () {
                         Navigator.push(
@@ -38,7 +38,8 @@ class WelcomeScreen extends StatelessWidget {
                       },
                       subTitle: 'Login if you have an account already'),
                   _button(
-                    image: AssetImages.signUpIcon,
+                      context: context,
+                      image: AssetImages.signUpIcon,
                       onTap: () {
                         Navigator.push(
                             context,
@@ -65,14 +66,19 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  _button({String title, subTitle, String image ,VoidCallback onTap}) {
+  _button(
+      {String title,
+      subTitle,
+      String image,
+      VoidCallback onTap,
+      BuildContext context}) {
     return InkWell(
       splashColor: appColor,
       focusColor: Colors.red,
       onTap: onTap,
       child: Container(
-        height: 150,
-        width: 150,
+        height: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.35,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

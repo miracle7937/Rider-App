@@ -9,22 +9,32 @@ class NewUser extends Repository {
       : super(serverData, context, path, data);
 }
 
-
-class UserWallet extends Repository{
-   final BuildContext context;
-   UserWallet(ServerData serverData, String path, this.context, {data})
+class UserWallet extends Repository {
+  final BuildContext context;
+  UserWallet(ServerData serverData, String path, this.context, {data})
       : super(serverData, context, path, data);
-
 }
-class TFRate extends Repository{
-   final BuildContext context;
-   TFRate(ServerData serverData, String path, this.context, {data})
+
+class TFRate extends Repository {
+  final BuildContext context;
+  TFRate(ServerData serverData, String path, this.context, {data})
       : super(serverData, context, path, data);
-
 }
-class DeductWallet extends Repository{
-   final BuildContext context;
-   DeductWallet(ServerData serverData, String path, this.context, {data, file})
+
+class DeductWallet extends Repository {
+  final BuildContext context;
+  DeductWallet(ServerData serverData, String path, this.context, {data, file})
       : super(serverData, context, path, data, file);
+}
 
+class UserOrder extends Repository {
+  final BuildContext context;
+  UserOrder(ServerData serverData, String path, this.context, {data})
+      : super(serverData, context, path, data);
+}
+
+class Logoutuser extends Repository {
+  final BuildContext context;
+  Logoutuser(ServerData serverData, String path, this.context, {data})
+      : super(serverData, context, path, data);
 }

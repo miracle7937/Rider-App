@@ -56,9 +56,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return ConnectivityWidget(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          OnboardingPref.isnewUser().then((value) => print(value));
-        }),
+        
         key: key,
         backgroundColor: appColor,
         body: CustomAuthWidget(
