@@ -6,19 +6,20 @@
     "storage_bucket": "bandofrider-38713.appspot.com"
   },
   "client": [
+
     {
       "client_info": {
-        "mobilesdk_app_id": "1:518405535985:android:346be54e53c70094181150",
+        "mobilesdk_app_id": "1:518405535985:android:868b0f42619fd352181150",
         "android_client_info": {
-          "package_name": "com.example.deliveryApp"
+          "package_name": "com.teetech.deliveryapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "518405535985-89vp1cdfnnhfts9uqghbi0ornsmn3se9.apps.googleusercontent.com",
+          "client_id": "518405535985-hhqqksg78flf21f9iiea7cc6cs7gq440.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.deliveryApp",
+            "package_name": "com.teetech.deliveryapp",
             "certificate_hash": "36a7816161a82925f4922796cf5929b5a5b118de"
           }
         },

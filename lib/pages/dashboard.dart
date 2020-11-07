@@ -13,16 +13,27 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class Dashboard extends StatefulWidget {
-  final List<OrderModel> orders;
-
-  const Dashboard({Key key, this.orders}) : super(key: key);
+  const Dashboard({
+    Key key,
+  }) : super(key: key);
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  List<OrderModel> orders = [];
+  getListOfOrder(BuildContext context) {
+    getOrder(context).then((value) {
+      print(value);
+      setState(() {
+        orders = value;
+      });
+    });
+  }
+
   @override
   void initState() {
+    getListOfOrder(context);
     super.initState();
   }
 
@@ -122,7 +133,7 @@ class _DashboardState extends State<Dashboard> {
                 SliverFixedExtentList(
                   itemExtent: 20,
                   delegate: SliverChildListDelegate([
-                    widget.orders.isNotEmpty
+                    orders.isNotEmpty
                         ? Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
@@ -156,13 +167,12 @@ class _DashboardState extends State<Dashboard> {
                         : Container(),
                   ]),
                 ),
-                widget.orders.isNotEmpty
+                orders.isNotEmpty
                     ? SliverList(
                         delegate: SliverChildListDelegate([
                         Column(
-                            children: (widget.orders.isNotEmpty ||
-                                    widget.orders != null)
-                                ? (widget.orders.reversed
+                            children: (orders.isNotEmpty || orders != null)
+                                ? (orders.reversed
                                     .toList()
                                     .map((value) => UserOrderCard(order: value))
                                     .toList())

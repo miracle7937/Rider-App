@@ -6,7 +6,6 @@ import 'package:deliveryApp/custom_ui/custom_form.dart';
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/http_request.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
-import 'package:deliveryApp/pref/localized_user_data.dart';
 import 'package:deliveryApp/static_content/API_KEY.dart';
 import 'package:deliveryApp/static_content/String.dart';
 import 'package:deliveryApp/static_content/colors.dart';
@@ -267,6 +266,7 @@ class _FundWalletScreenState extends State<FundWalletScreen> {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     } else {
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();

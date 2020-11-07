@@ -57,6 +57,10 @@ dependencies:
   screenshot: ^0.2.0
   geolocator: ^6.1.1
   image_gallery_saver: '^1.6.0'
+  onesignal_flutter: ^2.2.0
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

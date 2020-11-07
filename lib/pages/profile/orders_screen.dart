@@ -48,23 +48,6 @@ class _OrderScreenState extends State<OrderScreen> {
                   stream:
                       searchStream.searchOrders(context, query.toLowerCase()),
                   builder: (context, snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.waiting) {
-                    // return SizedBox(
-                    //     height: 80,
-                    //     width: 80,
-                    //     child: Lottie.asset(AssetImages.loading));
-                    // }
-                    // if (snapshot.data == null || snapshot.data.length == 0) {
-                    // return EmptyCards();
-                    // }
-                    // return ListView.builder(
-                    //     itemCount: snapshot.data?.length ?? 0,
-                    //     itemBuilder: (context, i) {
-                    //       var value = snapshot.data.reversed.toList();
-                    //       return UserOrderCard(order: value[i]);
-
-                    //     });
-
                     if (snapshot.hasData) {
                       final items = snapshot.data;
                       if (items.length > 0) {

@@ -1,9 +1,10 @@
-import 'package:deliveryApp/models/orderModel.dart';
 import 'package:deliveryApp/pages/dashboard.dart';
 import 'package:deliveryApp/pages/profile/orders_screen.dart';
 import 'package:deliveryApp/pages/profile/profile_view.dart';
+import 'package:deliveryApp/static_content/API_KEY.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,29 +13,22 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  List<OrderModel> orders = [];
 
-  List<Widget> get widgetOptions => <Widget>[
-        Dashboard(
-          orders: orders,
-        ),
-        OrderScreen(),
-        ProfileViewScreen()
-      ];
-
-  getListOfOrder(BuildContext context) {
-    getOrder(context).then((value) {
-      print(value);
-      setState(() {
-        orders = value;
-      });
-    });
-  }
+  List<Widget> get widgetOptions =>
+      <Widget>[Dashboard(), OrderScreen(), ProfileViewScreen()];
 
   @override
   void initState() {
-    getListOfOrder(context);
     super.initState();
+    onSignalSetUp();
+  }
+
+  onSignalSetUp() async {
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+    await OneSignal.shared.init(onSignalKey, iOSSettings: settings);
   }
 
   @override

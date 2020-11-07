@@ -52,11 +52,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return LoadingWidget(
       isLoading: loading,
