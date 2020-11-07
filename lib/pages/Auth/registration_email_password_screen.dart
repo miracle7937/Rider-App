@@ -4,7 +4,6 @@ import 'package:deliveryApp/custom_ui/loading_dialog.dart';
 import 'package:deliveryApp/http_request.dart';
 import 'package:deliveryApp/logic/authentication/register_newuser.dart';
 import 'package:deliveryApp/pages/Auth/SignupPage.dart';
-import 'package:deliveryApp/pages/dashboard.dart';
 import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:deliveryApp/utils/validation.dart';
@@ -13,8 +12,7 @@ import 'package:flutter/material.dart';
 class RegEmailPasswordScreen extends StatefulWidget {
   final String phoneNumber;
 
-  const RegEmailPasswordScreen({Key key, this.phoneNumber = '+25934837600955'})
-      : super(key: key);
+  const RegEmailPasswordScreen({Key key, this.phoneNumber}) : super(key: key);
 
   @override
   _RegEmailPasswordScreenState createState() => _RegEmailPasswordScreenState();
@@ -100,7 +98,6 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                         CustomTextForm(
                           passwords: true,
                           onFieldSubmitted: (_) {
-                            
                             _passwordFocusNode.unfocus();
                           },
                           validator: passwordValidation,

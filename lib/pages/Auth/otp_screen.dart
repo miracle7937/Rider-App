@@ -1,9 +1,6 @@
 import 'package:deliveryApp/custom_ui/custom_authpage_ui.dart';
-import 'package:deliveryApp/logic/connectivity/check_connectivity.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
 import 'package:deliveryApp/pages/Auth/registration_email_password_screen.dart';
-import 'package:deliveryApp/pref/checking_onboarding.dart';
-import 'package:deliveryApp/pref/localized_user_data.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -56,53 +53,57 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return ConnectivityWidget(
       child: Scaffold(
-        
         key: key,
         backgroundColor: appColor,
-        body: CustomAuthWidget(
-            isloading: false,
-            callback: () {
-              print('hello');
-              moveToNext(context,
-                  verificationId: widget.verificationId, smsCode: otp);
-            },
-            title: 'Enter OTP ',
-            subTitle:
-                '6 digit code has been sent to ${widget.phoneNumber}. Its usualy take up to 2 - 3 mins to receive code',
-            btnText: 'Continue',
-            form: PinCodeTextField(
-              textInputType: TextInputType.number,
-              length: 6,
-              obsecureText: false,
-              animationType: AnimationType.fade,
-              pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(5),
-                  borderWidth: 2,
-                  fieldHeight: 50,
-                  fieldWidth: 40,
-                  activeFillColor: Colors.white,
-                  inactiveColor: Colors.transparent,
-                  inactiveFillColor: Colors.white,
-                  selectedFillColor: Colors.red.withOpacity(0.1)),
-              animationDuration: Duration(milliseconds: 300),
-              backgroundColor: Colors.transparent,
-              enableActiveFill: true,
-              // controller: textEditingController,
-              onCompleted: (v) {
-                otp = v;
-                print(v);
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: CustomAuthWidget(
+              isloading: false,
+              callback: () {
+                print('hello');
+                moveToNext(context,
+                    verificationId: widget.verificationId, smsCode: otp);
               },
-              onChanged: (value) {
-                // otp = value;
-              },
-              beforeTextPaste: (text) {
-                print("Allowing to paste $text");
-                //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                return true;
-              },
-            )),
+              title: 'Enter OTP ',
+              subTitle:
+                  '6 digit code has been sent to ${widget.phoneNumber}. Its usualy take up to 2 - 3 mins to receive code',
+              btnText: 'Continue',
+              form: PinCodeTextField(
+                textInputType: TextInputType.number,
+                length: 6,
+                obsecureText: false,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(5),
+                    borderWidth: 2,
+                    fieldHeight: 50,
+                    fieldWidth: 40,
+                    activeFillColor: Colors.white,
+                    inactiveColor: Colors.transparent,
+                    inactiveFillColor: Colors.white,
+                    selectedFillColor: Colors.red.withOpacity(0.1)),
+                animationDuration: Duration(milliseconds: 300),
+                backgroundColor: Colors.transparent,
+                enableActiveFill: true,
+                // controller: textEditingController,
+                onCompleted: (v) {
+                  otp = v;
+                  print(v);
+                },
+                onChanged: (value) {
+                  // otp = value;
+                },
+                beforeTextPaste: (text) {
+                  print("Allowing to paste $text");
+                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                  return true;
+                },
+              )),
+        ),
       ),
     );
   }

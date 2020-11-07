@@ -1,8 +1,6 @@
 import 'package:deliveryApp/custom_ui/custom_card.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
-
 import 'package:deliveryApp/models/orderModel.dart';
-
 import 'package:deliveryApp/pages/fund_wallet_screen.dart';
 import 'package:deliveryApp/pages/profile/orders_screen.dart';
 import 'package:deliveryApp/pages/set_address_screean.dart';
@@ -62,6 +60,9 @@ class _DashboardState extends State<Dashboard> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
+                                SizedBox(
+                                  height: 15,
+                                ),
                                 FutureBuilder(
                                     future: retriveUserData(),
                                     builder: (context, snapshot) {
@@ -72,15 +73,15 @@ class _DashboardState extends State<Dashboard> {
                                         'Hi ${name ?? ''}',
                                         style: TextStyle(
                                             color: appColor,
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: 35,
+                                            fontWeight: FontWeight.bold),
                                       );
                                     }),
                                 Text(
                                   greetingMessage(),
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
                                 )
                               ],
                             ),

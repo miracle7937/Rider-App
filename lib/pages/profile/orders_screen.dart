@@ -2,10 +2,10 @@ import 'package:deliveryApp/custom_ui/custom_card.dart';
 import 'package:deliveryApp/custom_ui/custom_form.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
 import 'package:deliveryApp/models/orderModel.dart';
+import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:deliveryApp/static_content/Images.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
@@ -86,10 +86,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               reverse: true,
                               repeat: false));
                     } else {
-                      return SizedBox(
-                          height: 80,
-                          width: 80,
-                          child: Lottie.asset(AssetImages.loading));
+                      return SizedBox(child: Lottie.asset(AssetImages.loading));
                     }
                   }),
             )

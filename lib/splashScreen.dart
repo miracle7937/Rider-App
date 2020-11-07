@@ -18,7 +18,7 @@ class SplashScreenPage extends StatelessWidget {
             builder: (context, snapshot) {
               print(snapshot.data);
               return MySplashScreen(
-                seconds: 5,
+                seconds:7,
                 navigateAfterSeconds:snapshot.data, //snapshot.data,
                 title: Text(
                   'Welcome to Band of Riders',

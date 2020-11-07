@@ -16,11 +16,11 @@ class PackageDetails extends StatefulWidget {
   final amount;
 
   PackageDetails(
-
       {Key key,
-      this.distanceInKilloMeter =1.9,
+      this.distanceInKilloMeter = 1.9,
       this.pickUpLocation,
-      this.dropLocation, this.amount})
+      this.dropLocation,
+      this.amount})
       : super(key: key);
 
   @override
@@ -28,7 +28,6 @@ class PackageDetails extends StatefulWidget {
 }
 
 class _PackageDetailsState extends State<PackageDetails> {
-  
   bool _frigile = false;
 
   File _image;
@@ -58,7 +57,7 @@ class _PackageDetailsState extends State<PackageDetails> {
   final receiverName = TextEditingController();
   final receiverNumber = TextEditingController();
   final packageName = TextEditingController();
-  var packageWeight =  "0-10kg";
+  var packageWeight = "0-10kg";
   final packageValue = TextEditingController();
 
   int frigile = 0;
@@ -77,100 +76,105 @@ class _PackageDetailsState extends State<PackageDetails> {
           style: TextStyle(color: appColor),
         ),
       ),
-      body: Builder(builder: (context) {
-        return SingleChildScrollView(
-          child: Container(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40),
-              child: Column(
-                children: <Widget>[
-                  CustomTextForm(
-                    controller: receiverName,
-                    hinText: 'Enter the Receiver’s fullname ',
-                    title: 'Receiver’s Full Name',
-                  ),
-                  CustomTextForm(
-                    controller: receiverNumber,
-                    title: 'Receiver’s  Phone Number',
-                    keyboardType: TextInputType.number,
-                    hinText: 'Enter the Receiver’s Phone Number',
-                  ),
-                  CustomTextForm(
-                    controller: packageName,
-                    title: 'Package Title',
-                    hinText: 'Enter the package title',
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      CustomDropDowm(
-                        title: 'Weight',
-                        onChange: (value) {
-                          setState(() {
-                            packageWeight = value;
-                          });
-                        },
-                      ),
-                      customSwitch()
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextForm(
-                    controller: packageValue,
-                    title: 'Package Value',
-                    hinText: 'Enter the value in Naira',
-                    keyboardType: TextInputType.number,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  imageHolder(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Center(
-                        child: CustomButton(
-                          title: 'Continue',
-                          callback: () {
-                            if (!checkNullValue()) {
-                              errorSnackBar(
-                                  context, 'All field must be filled');
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PackagePreview(
-                                        amount: widget.amount.toString(),
-                                            pickupLoc: widget.pickUpLocation,
-                                            destinationLoc: widget.dropLocation,
-                                            frigile: frigile,
-                                            packageName: packageName.text,
-                                            packageValue: packageValue.text,
-                                            packageWeight: packageWeight,
-                                            selectedImage: _image,
-                                            distanceInKilloMeter:
-                                                widget.distanceInKilloMeter,
-                                            receiverName: receiverName.text,
-                                            receiverNumber: receiverNumber.text,
-                                          )));
-                            }
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Builder(builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40),
+                child: Column(
+                  children: <Widget>[
+                    CustomTextForm(
+                      controller: receiverName,
+                      hinText: 'Enter the Receiver’s fullname ',
+                      title: 'Receiver’s Full Name',
+                    ),
+                    CustomTextForm(
+                      controller: receiverNumber,
+                      title: 'Receiver’s  Phone Number',
+                      keyboardType: TextInputType.number,
+                      hinText: 'Enter the Receiver’s Phone Number',
+                    ),
+                    CustomTextForm(
+                      controller: packageName,
+                      title: 'Package Title',
+                      hinText: 'Enter the package title',
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        CustomDropDowm(
+                          title: 'Weight',
+                          onChange: (value) {
+                            setState(() {});
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        customSwitch()
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CustomTextForm(
+                      controller: packageValue,
+                      title: 'Package Value',
+                      hinText: 'Enter the value in Naira',
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    imageHolder(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Center(
+                          child: CustomButton(
+                            title: 'Continue',
+                            callback: () {
+                              if (!checkNullValue()) {
+                                errorSnackBar(
+                                    context, 'All field must be filled');
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PackagePreview(
+                                              amount: widget.amount.toString(),
+                                              pickupLoc: widget.pickUpLocation,
+                                              destinationLoc:
+                                                  widget.dropLocation,
+                                              frigile: frigile,
+                                              packageName: packageName.text,
+                                              packageValue: packageValue.text,
+                                              packageWeight: packageWeight,
+                                              selectedImage: _image,
+                                              distanceInKilloMeter:
+                                                  widget.distanceInKilloMeter,
+                                              receiverName: receiverName.text,
+                                              receiverNumber:
+                                                  receiverNumber.text,
+                                            )));
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 

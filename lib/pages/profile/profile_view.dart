@@ -1,9 +1,5 @@
 import 'package:deliveryApp/custom_ui/custom_button.dart';
-import 'package:deliveryApp/http_request.dart';
-import 'package:deliveryApp/logic/authentication/register_newuser.dart';
-import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
 import 'package:deliveryApp/models/walletModel.dart';
-import 'package:deliveryApp/pages/Auth/SignupPage.dart';
 import 'package:deliveryApp/pages/profile/edit_profile_screen.dart';
 import 'package:deliveryApp/pages/profile/orders_screen.dart';
 import 'package:deliveryApp/pref/localized_user_data.dart';
@@ -47,102 +43,103 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ConnectivityWidget(
-          child: Scaffold(
+    return Scaffold(
+      backgroundColor: whiteColor,
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         backgroundColor: whiteColor,
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          backgroundColor: whiteColor,
-          title: Text(
-            'Profile',
-            style: TextStyle(color: appColor),
-          ),
+        title: Text(
+          'Profile',
+          style: TextStyle(color: appColor),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 100,
-                  child: Lottie.asset(AssetImages.happyUser,
-                      frameRate: FrameRate.max, reverse: true, ),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(4, 4),
-                            blurRadius: 15,
-                            color: Color.fromRGBO(0, 0, 0, 0.18))
-                      ],
-                      shape: BoxShape.circle),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: 100,
+                height: 100,
+                child: Lottie.asset(
+                  AssetImages.happyUser,
+                  frameRate: FrameRate.max,
+                  reverse: true,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  user['firstname'] ?? '',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                Text(
-                  user['phone'] ?? '',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black.withOpacity(0.8)),
-                ),
-                Text(
-                  user['email'] ?? '',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey),
-                ),
-                WalletWidget(
-                  title: 'Wallet',
-                  icon: AssetImages.userwallet,
-                ),
-                dividerLisTile(
-                  title: 'Order',
-                  callback: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => OrderScreen()));
-                  },
-                  icon: AssetImages.order,
-                ),
-                dividerLisTile(
-                  callback: () {
-                    contactUsDialog();
-                  },
-                  title: 'Contact Us',
-                  icon: AssetImages.contactuse,
-                ),
-                dividerLisTile(
-                    title: 'Log out',
-                    icon: AssetImages.logOut,
-                    callback: () => logOutDialog()),
-                SizedBox(
-                  height: 20,
-                ),
-                CustomButton(
-                  title: 'Edit Profile',
-                  callback: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditProfileScreenScreen()));
-                  },
-                ),
-                SizedBox(
-                  height: 30,
-                )
-              ],
-            ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(4, 4),
+                          blurRadius: 15,
+                          color: Color.fromRGBO(0, 0, 0, 0.18))
+                    ],
+                    shape: BoxShape.circle),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                user['firstname'] ?? '',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              Text(
+                user['phone'] ?? '',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black.withOpacity(0.8)),
+              ),
+              Text(
+                user['email'] ?? '',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.grey),
+              ),
+              WalletWidget(
+                title: 'Wallet',
+                icon: AssetImages.userwallet,
+              ),
+              dividerLisTile(
+                title: 'Order',
+                callback: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => OrderScreen()));
+                },
+                icon: AssetImages.order,
+              ),
+              dividerLisTile(
+                callback: () {
+                  contactUsDialog();
+                },
+                title: 'Contact Us',
+                icon: AssetImages.contactuse,
+              ),
+              dividerLisTile(
+                  title: 'Log out',
+                  icon: AssetImages.logOut,
+                  callback: () => logOutDialog()),
+              SizedBox(
+                height: 20,
+              ),
+              CustomButton(
+                title: 'Edit Profile',
+                callback: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfileScreenScreen()));
+                },
+              ),
+              SizedBox(
+                height: 30,
+              )
+            ],
           ),
         ),
       ),

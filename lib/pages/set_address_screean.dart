@@ -13,11 +13,9 @@ import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart' as a;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart' as a;
-import 'package:lottie/lottie.dart' as load;
 import 'package:maps_toolkit/maps_toolkit.dart' as cal;
 
 class SetAddressScreen extends StatefulWidget {
@@ -69,7 +67,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
           context,
         ) {
           return ConnectivityWidget(
-                      child: Stack(
+            child: Stack(
               children: <Widget>[
                 GoogleMap(
                   onMapCreated: _onMapCreated,
@@ -170,7 +168,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
                       callback: () {
                         if (pickupLatLng == null &&
                             destinationLatLng == null &&
-                            matrixController.amount == null) {
+                            matrixController?.amount == null) {
                           errorSnackBar(
                               context, 'select pick up and drop locations');
                         } else {
@@ -178,7 +176,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => PackageDetails(
-                                        amount: matrixController.amount,
+                                        amount: matrixController?.amount,
                                         pickUpLocation: pickupLocation,
                                         dropLocation: destinationLocation,
                                         distanceInKilloMeter:
@@ -342,7 +340,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
         TimeDistanceController(pickupLatLng, destinationLatLng)
             .converToAmount()
             .then((value) {
-              print(' miracle $value');
+          print(' miracle $value');
           setState(() {
             matrixController = value;
           });

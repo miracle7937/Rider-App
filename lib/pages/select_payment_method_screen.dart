@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
-
+import 'package:deliveryApp/custom_ui/loading_dialog.dart';
 import 'package:deliveryApp/custom_ui/success_order_recieved.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
 import 'package:deliveryApp/logic/payment/payment.dart';
-import 'package:deliveryApp/custom_ui/loading_dialog.dart';
 import 'package:deliveryApp/models/walletModel.dart';
 import 'package:deliveryApp/pages/bank_payment_screen.dart';
 import 'package:deliveryApp/pages/pos_payment_method.dart';
@@ -62,7 +61,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return LoadingWidget(
       isLoading: loading,
       child: ConnectivityWidget(
-              child: Scaffold(
+        child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,
@@ -164,7 +163,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         });
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => SuccessOrder(
-                  requstCode: value.data['order_code'],
+                  requstCode: value.data['order_code'].toString(),
                 )));
       } else {
         setState(() {

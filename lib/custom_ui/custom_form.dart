@@ -54,14 +54,14 @@ class _CustomTextFormState extends State<CustomTextForm> {
           height: 10,
         ),
         Container(
-          height:50,
+          height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: widget.color,
           ),
           child: TextFormField(
             onChanged: widget.onChange,
-            obscureText:  widget.passwords? showPassword: false,
+            obscureText: widget.passwords ? showPassword : false,
             validator: widget.validator,
             onFieldSubmitted: widget.onFieldSubmitted,
             focusNode: widget.focusNode,
@@ -166,6 +166,9 @@ class _CustomDropDowmState extends State<CustomDropDowm> {
                 items: _dropdownMenuItems,
                 onChanged: (value) {
                   widget.onChange(value.name);
+                  setState(() {
+                    _selectedItem = value;
+                  });
                 }),
           ),
           decoration: BoxDecoration(

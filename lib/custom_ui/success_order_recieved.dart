@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/pages/main_page.dart';
 import 'package:deliveryApp/static_content/Images.dart';
+import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:lottie/lottie.dart';
-import 'package:deliveryApp/static_content/colors.dart';
 import 'package:screenshot/screenshot.dart';
 
 class SuccessOrder extends StatefulWidget {
@@ -76,7 +76,7 @@ class _SuccessOrderState extends State<SuccessOrder> {
                   ),
                   Text(
                     'Use code to confirm order when your rider arrives ',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -118,6 +118,7 @@ class _SuccessOrderState extends State<SuccessOrder> {
                       width: 150,
                       child: Text(
                         'Tap to save order in your gallery',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w300,

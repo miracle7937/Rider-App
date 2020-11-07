@@ -37,7 +37,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          'Bank payment',
+          'Pay with Bank Transfer',
           style: TextStyle(color: appColor),
         ),
       ),
@@ -51,8 +51,6 @@ class _BankPaymentScreenState extends State<BankPaymentScreen> {
                 return Container(
                   child: Center(
                     child: SizedBox(
-                      height: 100,
-                      width: 100,
                       child: Lottie.asset(AssetImages.loading),
                     ),
                   ),
@@ -89,7 +87,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         child: Text(
                           title,
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -147,9 +145,20 @@ class _BankPaymentScreenState extends State<BankPaymentScreen> {
             child: Row(
               children: <Widget>[
                 image != null ? Image.asset(AssetImages.bankIcon) : Container(),
+                image != null
+                    ? SizedBox(
+                        width: 7,
+                      )
+                    : SizedBox.shrink(),
                 Text(
                   title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: 5,
                 ),
                 Wrap(
                   children: [
@@ -157,7 +166,7 @@ class _BankPaymentScreenState extends State<BankPaymentScreen> {
                       subTitle,
                       maxLines: 1,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                       ),
                     )
                   ],

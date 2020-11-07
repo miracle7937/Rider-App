@@ -27,13 +27,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
       // on author authenticate move directly to email page
       showSnack(success: true, message: 'Phone Number  Verify');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => RegEmailPasswordScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => RegEmailPasswordScreen(
+                    phoneNumber: phoneNumber,
+                  )));
     };
 
     final PhoneVerificationFailed verificationfailed =
         (AuthException authException) {
-      showSnack(success: false, message: 'Verify Fails');
+      // showSnack(success: false, message: 'Verify Fails');
     };
 
     final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
@@ -65,54 +69,57 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       key: key,
       backgroundColor: appColor,
       body: Builder(builder: (context) {
-        return CustomAuthWidget(
-          callback: () {
-            // NewUser(ServerData(), '/comments', context).get();
-            // print('Navigating OTP page');
-
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OTPScreen(
-                          phoneNumber: phoneNumber,
-                          verificationId: verificationId,
-                        )));
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
           },
-          title: 'Register',
-          subTitle: 'Join us to send and receive package',
-          btnText: 'Continue',
-          form: InternationalPhoneNumberInput(
-            autoFocus: true,
-            countries: ['NG'],
-            textStyle: TextStyle(
-              color: Colors.white,
-            ),
-            inputDecoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Phone Number',
-              hintStyle: TextStyle(color: Colors.white),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: appColor, width: 0.5),
+          child: CustomAuthWidget(
+            callback: () {
+              // NewUser(ServerData(), '/comments', context).get();
+              // print('Navigating OTP page');
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OTPScreen(
+                            phoneNumber: phoneNumber,
+                            verificationId: verificationId,
+                          )));
+            },
+            title: 'Register',
+            subTitle: 'Join us to send and receive package',
+            btnText: 'Continue',
+            form: InternationalPhoneNumberInput(
+              autoFocus: true,
+              countries: ['NG'],
+              textStyle: TextStyle(
+                color: Colors.white,
               ),
-              fillColor: Colors.grey.withOpacity(0.2),
-              filled: true,
+              inputDecoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Phone Number',
+                hintStyle: TextStyle(color: Colors.white),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: appColor, width: 0.5),
+                ),
+                fillColor: Colors.grey.withOpacity(0.2),
+                filled: true,
+              ),
+              onInputChanged: (PhoneNumber number) {
+                print(number.phoneNumber);
+                this.phoneNumber = number.phoneNumber;
+              },
+              onInputValidated: (bool value) {
+                print(value);
+                if (value == true) {
+                  verifyPhone(phoneNumber);
+                }
+              },
+              selectorTextStyle: TextStyle(color: Colors.white),
             ),
-            onInputChanged: (PhoneNumber number) {
-              print(number.phoneNumber);
-              this.phoneNumber = number.phoneNumber;
-            },
-            onInputValidated: (bool value) {
-              print(value);
-              if (value == true) {
-                verifyPhone(phoneNumber);
-              }
-            },
-         
-            selectorTextStyle: TextStyle(color: Colors.white),
           ),
         );
       }),
