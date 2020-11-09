@@ -6,7 +6,6 @@ import 'package:deliveryApp/custom_ui/custom_card.dart';
 import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/custom_ui/package_details.dart';
 import 'package:deliveryApp/logic/connectivity/connectivity_widget.dart';
-import 'package:deliveryApp/logic/geolocation/geolocation.dart';
 import 'package:deliveryApp/logic/time_and_price_controller/price_and_time_controller.dart';
 import 'package:deliveryApp/static_content/API_KEY.dart';
 import 'package:deliveryApp/static_content/Images.dart';
@@ -303,20 +302,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
                 width: 10,
               ),
               showIcon
-                  ? InkWell(
-                      onTap: () {
-                        UserLocation.currentLocation().then((value) {
-                          if (value != null) {
-                            _mapController.animateCamera(
-                                CameraUpdate.newCameraPosition(CameraPosition(
-                                    target:
-                                        LatLng(value.latitude, value.longitude),
-                                    zoom: 12.0,
-                                    tilt: 12)));
-                          }
-                        });
-                      },
-                      child: Image.asset(AssetImages.place))
+                  ? InkWell(onTap: () {}, child: Image.asset(AssetImages.place))
                   : Container()
             ],
           ),
