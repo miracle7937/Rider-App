@@ -35,11 +35,8 @@ dependencies:
   email_validator: ^1.0.0
   shared_preferences: ^0.5.12
   google_fonts: ^1.1.0
-  firebase_auth:
-#  firebase_auth: ^0.18.1+1
   lottie: ^0.6.0
   http: ^0.12.2
-  firebase_core: ^0.3.0+2
   google_maps_flutter: ^1.0.3
   flutter_google_places:
   google_maps_webservice: ^0.0.18

@@ -1,8 +1,6 @@
 import 'package:deliveryApp/custom_ui/custom_authpage_ui.dart';
 import 'package:deliveryApp/pages/Auth/otp_screen.dart';
-import 'package:deliveryApp/pages/Auth/registration_email_password_screen.dart';
 import 'package:deliveryApp/static_content/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -23,43 +21,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     ));
   }
 
-  Future<void> verifyPhone(phoneNo) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      // on author authenticate move directly to email page
-      showSnack(success: true, message: 'Phone Number  Verify');
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => RegEmailPasswordScreen(
-                    phoneNumber: phoneNumber,
-                  )));
-    };
-
-    final PhoneVerificationFailed verificationfailed =
-        (AuthException authException) {
-      // showSnack(success: false, message: 'Verify Fails');
-    };
-
-    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
-      this.verificationId = verId;
-      showSnack(success: true, message: 'sms  Otp sends ');
-      // setState(() {
-      //   this.codeSent = true;
-      // });
-    };
-
-    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
-      this.verificationId = verId;
-    };
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        timeout: const Duration(minutes: 2),
-        verificationCompleted: verified,
-        verificationFailed: verificationfailed,
-        codeSent: smsSent,
-        codeAutoRetrievalTimeout: autoTimeout);
-  }
+  // Future<void> verifyPhone(phoneNo) async {
+  //   final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+  //     // on author authenticate move directly to email page
+  //     showSnack(success: true, message: 'Phone Number  Verify');
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => RegEmailPasswordScreen(
+  //                   phoneNumber: phoneNumber,
+  //                 )));
+  //   };
+  //
+  //   final PhoneVerificationFailed verificationfailed =
+  //       (AuthException authException) {
+  //     // showSnack(success: false, message: 'Verify Fails');
+  //   };
+  //
+  //   final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+  //     this.verificationId = verId;
+  //     showSnack(success: true, message: 'sms  Otp sends ');
+  //     // setState(() {
+  //     //   this.codeSent = true;
+  //     // });
+  //   };
+  //
+  //   final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+  //     this.verificationId = verId;
+  //   };
+  //
+  //   await FirebaseAuth.instance.verifyPhoneNumber(
+  //       phoneNumber: phoneNo,
+  //       timeout: const Duration(minutes: 2),
+  //       verificationCompleted: verified,
+  //       verificationFailed: verificationfailed,
+  //       codeSent: smsSent,
+  //       codeAutoRetrievalTimeout: autoTimeout);
+  // }
 
   @override
   void initState() {
@@ -115,7 +113,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               onInputValidated: (bool value) {
                 print(value);
                 if (value == true) {
-                  verifyPhone(phoneNumber);
+                  // verifyPhone(phoneNumber);
                 }
               },
               selectorTextStyle: TextStyle(color: Colors.white),

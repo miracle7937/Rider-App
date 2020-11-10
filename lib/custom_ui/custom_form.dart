@@ -54,7 +54,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
           height: 10,
         ),
         Container(
-          height: 50,
+          // height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: widget.color,

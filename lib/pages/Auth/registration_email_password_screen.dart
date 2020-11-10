@@ -1,7 +1,7 @@
 import 'package:deliveryApp/custom_ui/custom_button.dart';
 import 'package:deliveryApp/custom_ui/custom_form.dart';
+import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
 import 'package:deliveryApp/custom_ui/loading_dialog.dart';
-import 'package:deliveryApp/http_request.dart';
 import 'package:deliveryApp/logic/authentication/register_newuser.dart';
 import 'package:deliveryApp/pages/Auth/SignupPage.dart';
 import 'package:deliveryApp/static_content/Images.dart';
@@ -9,10 +9,13 @@ import 'package:deliveryApp/static_content/colors.dart';
 import 'package:deliveryApp/utils/validation.dart';
 import 'package:flutter/material.dart';
 
+import '../../http_request.dart';
+
 class RegEmailPasswordScreen extends StatefulWidget {
   final String phoneNumber;
 
-  const RegEmailPasswordScreen({Key key, this.phoneNumber}) : super(key: key);
+  const RegEmailPasswordScreen({Key key, this.phoneNumber = '08168307987'})
+      : super(key: key);
 
   @override
   _RegEmailPasswordScreenState createState() => _RegEmailPasswordScreenState();
@@ -127,19 +130,31 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                                         data: {
                                           "firstname": firstName.text,
                                           "lastname": lastnaeme.text,
-                                          "phone": widget.phoneNumber,
+                                          "phone": '0816830793',
                                           "email": email.text,
                                           "password": password.text
                                         }).post().then((value) {
                                       print('chi $value');
 
                                       if (value?.data != null) {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (contex) =>
-                                                    SignInScreen()));
+                                        customAlertDialog(context,
+                                            success: true,
+                                            succMessage:
+                                                'Your registration is successful',
+                                            onTap: () {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (contex) =>
+                                                      SignInScreen()));
+                                        });
+                                      } else {
+                                        customAlertDialog(
+                                          context,
+                                          success: false,
+                                        );
                                       }
+
                                       setState(() {
                                         isLoading = false;
                                       });
