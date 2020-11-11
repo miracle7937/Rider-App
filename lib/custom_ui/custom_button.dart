@@ -1,3 +1,4 @@
+import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -6,13 +7,13 @@ class CustomButton extends StatelessWidget {
   final bool loading;
   final Color color;
   final TextStyle textStyle;
-final bool disAble;
+  final bool disAble;
   const CustomButton({
     Key key,
     @required this.title,
     this.callback,
     this.loading = false,
-    this.disAble =false,
+    this.disAble = false,
     this.color,
     this.textStyle,
   }) : super(key: key);
@@ -36,7 +37,7 @@ final bool disAble;
                   padding: const EdgeInsets.all(10.0),
                   child: CircularProgressIndicator(
                       strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
+                      valueColor: AlwaysStoppedAnimation<Color>(appColor)),
                 ),
         ),
       ),

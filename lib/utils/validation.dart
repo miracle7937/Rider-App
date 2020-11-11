@@ -7,14 +7,15 @@ String userNameValidation(String name) {
     return null;
 }
 
-String  emailValidation(email) =>
-    EmailValidator.validate(email) ? null : 'not a valid email';
+String emailValidation(email) => EmailValidator.validate(email)
+    ? null
+    : 'Please provide a proper formatted email address';
 
 String passwordValidation(String password) {
   if (password.length < 5) {
-    return 'password too short';
+    return 'password length is too short';
   } else if (password.contains(' ')) {
-    return 'password not properly formatted';
+    return 'Please ensure password is properly formatted';
   } else {
     return null;
   }

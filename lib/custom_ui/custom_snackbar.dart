@@ -28,7 +28,7 @@ successSnackBar(BuildContext context, String message) {
 customAlertDialog(
   BuildContext context, {
   bool success = false,
-  String succMessage,
+  String message,
   VoidCallback onTap,
 }) {
   showModalBottomSheet(
@@ -54,14 +54,14 @@ customAlertDialog(
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.30,
                     child: Lottie.asset(
-                        success ? AssetImages.success : AssetImages.error,
+                        success ? AssetImages.main_success : AssetImages.error,
                         repeat: success),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    success ? succMessage : errorMsg,
+                    message,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),

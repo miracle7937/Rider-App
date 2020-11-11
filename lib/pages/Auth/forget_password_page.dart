@@ -1,6 +1,7 @@
 import 'package:deliveryApp/custom_ui/custom_authpage_ui.dart';
 import 'package:deliveryApp/custom_ui/custom_form.dart';
 import 'package:deliveryApp/logic/authentication/register_newuser.dart';
+import 'package:deliveryApp/static_content/Images.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:deliveryApp/utils/validation.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 });
                 NewUser(ServerData(), '/forgotPassword', context,
                     data: {"email": email.text}).post().then((value) {
-                      
-
                   setState(() {
                     isLoading = false;
                   });
@@ -59,15 +58,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   Form(
                     key: _formKey,
                     child: CustomTextForm(
-                      color: Colors.white,
-                      validator: emailValidation,
-                      controller: email,
-                      titleStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                      title: 'Email ',
-                    ),
+                        validator: emailValidation,
+                        controller: email,
+                        titleStyle: style,
+                        inputStyle: TextStyle(color: Colors.white),
+                        title: 'Email',
+                        decoration: getInputStyle(icon: AssetImages.email)),
                   ),
                 ],
               );
@@ -78,6 +74,21 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           ),
         );
       }),
+    );
+  }
+
+  TextStyle get style =>
+      TextStyle(fontWeight: FontWeight.w800, color: Colors.white);
+  getInputStyle({String icon}) {
+    return InputDecoration(
+      prefixIcon: Image.asset(
+        icon,
+      ),
+      enabledBorder:
+          OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+      focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 2)),
     );
   }
 }

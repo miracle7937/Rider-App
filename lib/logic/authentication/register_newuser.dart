@@ -38,3 +38,9 @@ class Logoutuser extends Repository {
   Logoutuser(ServerData serverData, String path, this.context, {data})
       : super(serverData, context, path, data);
 }
+
+class OTPRepo extends Repository {
+  final BuildContext context;
+  OTPRepo(ServerData serverData, String path, this.context, {data})
+      : super(serverData, context, path, data);
+}

@@ -1,4 +1,6 @@
 import 'package:deliveryApp/custom_ui/custom_authpage_ui.dart';
+import 'package:deliveryApp/custom_ui/custom_snackbar.dart';
+import 'package:deliveryApp/logic/otp_controller/otp_controller.dart';
 import 'package:deliveryApp/pages/Auth/otp_screen.dart';
 import 'package:deliveryApp/static_content/colors.dart';
 import 'package:flutter/material.dart';
@@ -13,51 +15,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final key = GlobalKey<ScaffoldState>();
   String verificationId;
   String phoneNumber;
-
-  showSnack({bool success, message}) {
-    key.currentState.showSnackBar(SnackBar(
-      backgroundColor: success ? Colors.green : Colors.red,
-      content: Text(message),
-    ));
-  }
-
-  // Future<void> verifyPhone(phoneNo) async {
-  //   final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-  //     // on author authenticate move directly to email page
-  //     showSnack(success: true, message: 'Phone Number  Verify');
-  //     Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) => RegEmailPasswordScreen(
-  //                   phoneNumber: phoneNumber,
-  //                 )));
-  //   };
-  //
-  //   final PhoneVerificationFailed verificationfailed =
-  //       (AuthException authException) {
-  //     // showSnack(success: false, message: 'Verify Fails');
-  //   };
-  //
-  //   final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
-  //     this.verificationId = verId;
-  //     showSnack(success: true, message: 'sms  Otp sends ');
-  //     // setState(() {
-  //     //   this.codeSent = true;
-  //     // });
-  //   };
-  //
-  //   final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
-  //     this.verificationId = verId;
-  //   };
-  //
-  //   await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: phoneNo,
-  //       timeout: const Duration(minutes: 2),
-  //       verificationCompleted: verified,
-  //       verificationFailed: verificationfailed,
-  //       codeSent: smsSent,
-  //       codeAutoRetrievalTimeout: autoTimeout);
-  // }
+  bool loading = false;
 
   @override
   void initState() {
@@ -75,10 +33,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: CustomAuthWidget(
+            isloading: loading,
             callback: () {
-              // NewUser(ServerData(), '/comments', context).get();
-              // print('Navigating OTP page');
-
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -91,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             subTitle: 'Join us to send and receive package',
             btnText: 'Continue',
             form: InternationalPhoneNumberInput(
-              autoFocus: true,
+              autoFocus: false,
               countries: ['NG'],
               textStyle: TextStyle(
                 color: Colors.white,
@@ -107,13 +63,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 filled: true,
               ),
               onInputChanged: (PhoneNumber number) {
-                print(number.phoneNumber);
                 this.phoneNumber = number.phoneNumber;
               },
               onInputValidated: (bool value) {
                 print(value);
                 if (value == true) {
-                  // verifyPhone(phoneNumber);
+                  sendOTP(context, phoneNumber);
                 }
               },
               selectorTextStyle: TextStyle(color: Colors.white),
@@ -122,5 +77,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
       }),
     );
+  }
+
+  sendOTP(BuildContext context, number) {
+    setState(() {
+      loading = true;
+    });
+    OTPController.otpRegistration(number).then((value) {
+      setState(() {
+        loading = false;
+      });
+      print(value);
+      if (value == null) {
+        customAlertDialog(context, message: 'There was an error sending OTP');
+      } else {
+        successSnackBar(context, 'OTP has been sent successfully');
+        Future.delayed(Duration(seconds: 2), () {
+          print('navigate');
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => OTPScreen(
+                    phoneNumber: phoneNumber,
+                    verificationId: value['pin_id'],
+                  )));
+        });
+      }
+    }).catchError(() {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 }

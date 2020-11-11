@@ -14,7 +14,7 @@ import '../../http_request.dart';
 class RegEmailPasswordScreen extends StatefulWidget {
   final String phoneNumber;
 
-  const RegEmailPasswordScreen({Key key, this.phoneNumber = '08168307987'})
+  const RegEmailPasswordScreen({Key key, @required this.phoneNumber})
       : super(key: key);
 
   @override
@@ -130,7 +130,7 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                                         data: {
                                           "firstname": firstName.text,
                                           "lastname": lastnaeme.text,
-                                          "phone": '0816830793',
+                                          "phone": widget.phoneNumber,
                                           "email": email.text,
                                           "password": password.text
                                         }).post().then((value) {
@@ -139,7 +139,7 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                                       if (value?.data != null) {
                                         customAlertDialog(context,
                                             success: true,
-                                            succMessage:
+                                            message:
                                                 'Your registration is successful',
                                             onTap: () {
                                           Navigator.pushReplacement(
@@ -149,10 +149,10 @@ class _RegEmailPasswordScreenState extends State<RegEmailPasswordScreen> {
                                                       SignInScreen()));
                                         });
                                       } else {
-                                        customAlertDialog(
-                                          context,
-                                          success: false,
-                                        );
+                                        customAlertDialog(context,
+                                            success: false,
+                                            message:
+                                                "error occurred, request wasn't received");
                                       }
 
                                       setState(() {
